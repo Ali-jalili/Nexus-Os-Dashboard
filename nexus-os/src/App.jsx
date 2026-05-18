@@ -1,6 +1,7 @@
 /** @format */
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import HomePage from "./features/public-pages/HomePage";
 import JobApplicationForm from "./features/public-pages/JobApplicationForm";
 import ProjectRequestForm from "./features/public-pages/ProjectRequestForm";
@@ -10,9 +11,10 @@ import ProjectsBoard from "./features/projects/ProjectsBoard";
 import RequestsInbox from "./features/requests/RequestsInbox";
 import ClientsList from "./features/clients/ClientsList";
 import CandidatesList from "./features/candidates/CandidatesList";
-import ClientLayout from "./app/ClientLayout";
-import AppLayout from "./app/AppLayout";
 import ClientView from "./features/client-portal/ClientView";
+import ProtectedRoute from "./app/ProtectedRoute";
+import AppLayout from "./app/AppLayout";
+import ClientLayout from "./app/ClientLayout";
 
 const routes = createBrowserRouter([
   {
@@ -34,35 +36,46 @@ const routes = createBrowserRouter([
 
   {
     path: "/app",
-    element: <AppLayout />,
+    element: <ProtectedRoute />,
+
     children: [
       {
-        path: "admin",
-        element: <AdminDashboard />,
-      },
-      {
-        path: "projects",
-        element: <ProjectsBoard />,
-      },
-      {
-        path: "requests",
-        element: <RequestsInbox />,
-      },
-      {
-        path: "clients",
-        element: <ClientsList />,
-      },
-      {
-        path: "candidates",
-        element: <CandidatesList />,
+        element: <AppLayout />,
+        children: [
+          {
+            path: "admin",
+            element: <AdminDashboard />,
+          },
+          {
+            path: "projects",
+            element: <ProjectsBoard />,
+          },
+          {
+            path: "requests",
+            element: <RequestsInbox />,
+          },
+          {
+            path: "clients",
+            element: <ClientsList />,
+          },
+          {
+            path: "candidates",
+            element: <CandidatesList />,
+          },
+        ],
       },
     ],
   },
 
   {
     path: "/client-dashboard",
-    element: <ClientLayout />,
-    children: [{ index: true, element: <ClientView /> }],
+    element: <ProtectedRoute />,
+    children: [
+      {
+        element: <ClientLayout />,
+        children: [{ index: true, element: <ClientView /> }],
+      },
+    ],
   },
 ]);
 
