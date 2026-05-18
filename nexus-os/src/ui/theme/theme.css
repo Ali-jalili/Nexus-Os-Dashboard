@@ -1,0 +1,50 @@
+/* ===========================
+   Nexus Design System 1.0
+   تم: Modern Dark
+=========================== */
+
+/* ۱. فعال‌سازی تم پیش‌فرض تاریک */
+:root .dark,
+:root {
+  /* ---------- رنگ‌های اصلی پس‌زمینه ---------- */
+  --bg-primary: #0D0F12;      /* پس‌زمینه اصلی */
+  --bg-secondary: #15181D;    /* پس‌زمینه کارت‌ها و سایدبار */
+  --bg-elevated: #1C2026;     /* پس‌زمینه hover و modal */
+  --border-primary: #252A31;  /* خطوط جداکننده */
+
+  /* ---------- رنگ‌های متن ---------- */
+  --text-primary: #F4F5F6;    /* متن اصلی */
+  --text-secondary: #A1A5AB;  /* متن فرعی */
+  --text-tertiary: #5C6168;   /* متن غیرفعال و placeholder */
+
+  /* ---------- رنگ‌های تاکیدی (Accent) ---------- */
+  --accent-primary: #3B82F6;  /* دکمه‌ها و لینک‌ها */
+  --accent-hover: #2563EB;    /* حالت hover */
+  --accent-subtle: rgba(59,130,246,0.08); /* پس‌زمینه بسیار کم‌رنگ */
+
+  /* ---------- رنگ‌های وضعیت (Semantic) ---------- */
+  --success: #10B981;         /* موفقیت‌آمیز */
+  --warning: #F59E0B;         /* هشدار */
+  --error: #EF4444;           /* خطا */
+  --info: #6366F1;            /* اطلاع‌رسانی */
+
+  /* ---------- تایپوگرافی ---------- */
+  --font-primary: 'Inter', sans-serif;
+  --font-persian: 'Vazirmatn', sans-serif;
+
+  /* ---------- اندازه‌ها و فرم‌ها ---------- */
+  --radius-sm: 6px;           /* گردی inputها */
+  --radius-md: 8px;           /* گردی کارت‌ها و دکمه‌ها */
+  --radius-lg: 12px;          /* گردی modalها */
+
+  /* ---------- سایه‌ها ---------- */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-modal: 0 20px 60px rgba(0,0,0,0.6);
+}
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  margin: 0;
+  padding: 0;
+}
