@@ -1,7 +1,7 @@
 /** @format */
 
 import { createContext, useEffect, useState } from "react";
-import { createClient } from "@supabase/supabase-js";
+
 import supabase from "../services/supabase.";
 
 const AuthContext = createContext(null);
@@ -51,6 +51,7 @@ function AuthProvider({ children }) {
         role,
         handleLogin,
         handleLogout,
+        isLoading,
       }}
     >
       {children}

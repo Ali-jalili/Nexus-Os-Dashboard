@@ -15,6 +15,7 @@ import ClientView from "./features/client-portal/ClientView";
 import ProtectedRoute from "./app/ProtectedRoute";
 import AppLayout from "./app/AppLayout";
 import ClientLayout from "./app/ClientLayout";
+import { Toaster } from "react-hot-toast";
 
 const routes = createBrowserRouter([
   {
@@ -82,6 +83,7 @@ const routes = createBrowserRouter([
 function App() {
   return (
     <>
+      <Toaster position="top-center" />
       <RouterProvider router={routes} />
     </>
   );
