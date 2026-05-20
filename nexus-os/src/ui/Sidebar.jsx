@@ -18,7 +18,6 @@ function Sidebar() {
         className={({ isActive }) =>
           isActive ? `${styles.link} ${styles.active}` : styles.link
         }
-        ب
         to="/app/projects"
       >
         Projects{" "}

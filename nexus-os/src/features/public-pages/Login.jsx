@@ -18,7 +18,7 @@ function Login() {
 
     try {
       await handleLogin(email, password);
-      toast.success("با موفقیت وارد شدید");
+      toast.success("ا موفقیت وارد شدید");
       navigate("/app/admin");
     } catch (error) {
       toast.error(error.message);
