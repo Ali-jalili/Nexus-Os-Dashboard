@@ -1,0 +1,151 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 2rem;
+}
+
+.gradient {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at center,
+    rgba(59, 130, 246, 0.08) 0%,
+    transparent 60%
+  );
+  animation: rotate 30s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 700px;
+  animation: fadeIn 1s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0 0 1rem;
+  letter-spacing: -1px;
+}
+
+.highlight {
+  color: var(--accent-primary);
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 0 0 3rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 2rem 2.5rem;
+  background: rgba(21, 24, 29, 0.7);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  text-decoration: none;
+  transition: all 0.3s ease;
+  min-width: 260px;
+ 
+  max-width: 320px;
+}
+
+.card:hover {
+  border-color: var(--accent-primary);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(59, 130, 246, 0.15);
+}
+
+.icon {
+  font-size: 2rem;
+  color: var(--accent-primary);
+  margin-bottom: 0.5rem;
+}
+
+.cardTitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.cardDesc {
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  text-align: center;
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.2rem;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card {
+    max-width: 100%;
+    max-width: 400px;
+    width: 81%;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.8rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+}

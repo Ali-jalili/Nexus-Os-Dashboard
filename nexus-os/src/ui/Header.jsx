@@ -1,24 +1,38 @@
 /** @format */
 
 import styles from "./Header.module.css";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import useAuth from "../Hook/useAuth";
 
 function Header() {
-  const { handleLogout } = useAuth();
-  const navigta = useNavigate();
+  const { user, handleLogout } = useAuth();
+  const navigate = useNavigate();
 
   async function handleExit() {
     await handleLogout();
-    navigta("/login");
+    navigate("/login");
   }
 
   return (
     <header className={styles.header}>
       <h1 className={styles.title}> Nexus Agency OS</h1>
-      <button className={styles.logoutBtn} onClick={handleExit}>
-        Logut
-      </button>
+
+      {user ? (
+        <div className={styles.actions}>
+          <NavLink to="/app/admin" className={styles.link}>
+            Dashboard
+          </NavLink>
+          <button className={styles.logoutBtn} onClick={handleExit}>
+            Logout
+          </button>
+        </div>
+      ) : (
+        <div className={styles.actions}>
+          <NavLink to="/login" className={styles.link}>
+            Login
+          </NavLink>
+        </div>
+      )}
     </header>
   );
 }

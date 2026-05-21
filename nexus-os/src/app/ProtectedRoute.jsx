@@ -1,11 +1,12 @@
 /** @format */
 import { Outlet, Navigate } from "react-router-dom";
 import useAuth from "../Hook/useAuth";
+import Spinner from "../ui/Spinner";
 
 function ProtectedRoute() {
   const { user, isLoading } = useAuth();
   if (isLoading) {
-    return <div> nvohg</div>;
+    return <Spinner />;
   }
   if (!user) return <Navigate to="/login" />;
 

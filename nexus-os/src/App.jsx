@@ -16,23 +16,29 @@ import ProtectedRoute from "./app/ProtectedRoute";
 import AppLayout from "./app/AppLayout";
 import ClientLayout from "./app/ClientLayout";
 import { Toaster } from "react-hot-toast";
+import PublicLayout from "./app/PublicLayout";
 
 const routes = createBrowserRouter([
   {
-    path: "/",
-    element: <HomePage />,
-  },
-  {
-    path: "/apply-job",
-    element: <JobApplicationForm />,
-  },
-  {
-    path: "/request-project",
-    element: <ProjectRequestForm />,
-  },
-  {
-    path: "/login",
-    element: <Login />,
+    element: <PublicLayout />,
+    children: [
+      {
+        path: "/",
+        element: <HomePage />,
+      },
+      {
+        path: "/apply-job",
+        element: <JobApplicationForm />,
+      },
+      {
+        path: "/request-project",
+        element: <ProjectRequestForm />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
+      },
+    ],
   },
 
   {

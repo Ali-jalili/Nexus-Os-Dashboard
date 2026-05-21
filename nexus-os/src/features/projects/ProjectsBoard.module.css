@@ -1,0 +1,144 @@
+.board {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.addBtn {
+  padding: 0.5rem 1rem;
+  background-color: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 500;
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.searchInput::placeholder {
+  color: var(--text-tertiary);
+}
+
+.select {
+  padding: 0.5rem 0.75rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.tableWrapper {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-primary);
+  font-size: 0.9rem;
+}
+
+.table th {
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background-color: var(--bg-elevated);
+}
+
+.table td {
+  color: var(--text-primary);
+}
+
+.badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  display: inline-block;
+}
+
+.pending {
+  background-color: rgba(245, 158, 11, 0.15);
+  color: var(--warning);
+}
+
+.inProgress {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: var(--accent-primary);
+}
+
+.completed {
+  background-color: rgba(16, 185, 129, 0.15);
+  color: var(--success);
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background-color: var(--bg-primary);
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: var(--accent-primary);
+  border-radius: 100px;
+  transition: width 0.3s ease;
+}
+
+.actionBtn {
+  padding: 0.25rem 0.75rem;
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.actionBtn:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
