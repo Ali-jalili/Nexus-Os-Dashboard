@@ -33,6 +33,8 @@ function ProjectRequestForm() {
       setClientName("");
       setCompanyName("");
       setBudget("");
+      setEmail("");
+      setPhone("");
       setDescription("");
     }
   }

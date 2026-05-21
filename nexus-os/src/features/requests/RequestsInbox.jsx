@@ -16,7 +16,12 @@ function RequestsInbox() {
   async function handleApprove(req) {
     const { data: clientData, error: clientError } = await supabase
       .from("clients")
-      .insert({ full_name: req.client_name, company_name: req.company_name })
+      .insert({
+        full_name: req.client_name,
+        company_name: req.company_name,
+        contact_email: req.contact_email,
+        phone: req.phone,
+      })
       .select("id")
       .single();
 
