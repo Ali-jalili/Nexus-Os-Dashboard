@@ -4,8 +4,10 @@ import { useState } from "react";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import useAuth from "../../Hook/useAuth";
 
 function SignupClientPage() {
+  const { handleLogin } = useAuth();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,7 +29,8 @@ function SignupClientPage() {
     if (error) return toast.error(error.message);
 
     if (data.user) {
-      toast.success("ok");
+      await handleLogin(email, password);
+      toast.success("Account created successfully!");
       navigate("/client-dashboard");
     }
   }

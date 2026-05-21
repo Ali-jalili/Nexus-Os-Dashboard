@@ -19,6 +19,7 @@ import { Toaster } from "react-hot-toast";
 import PublicLayout from "./app/PublicLayout";
 import GetStartedPage from "./features/public-pages/GetStartedPage";
 import SignupClientPage from "./features/public-pages/SignupClientPage";
+import SignupDeveloperPage from "./features/public-pages/SignupDeveloperPage";
 
 const routes = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const routes = createBrowserRouter([
       {
         path: "signup/client",
         element: <SignupClientPage />,
+      },
+      {
+        path: "signup/developer",
+        element: <SignupDeveloperPage />,
       },
     ],
   },
