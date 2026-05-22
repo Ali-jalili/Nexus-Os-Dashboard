@@ -50,7 +50,7 @@ function HomePage() {
             your ideas into reality.
           </p>
           <div className={styles.ctaGroup}>
-            <Link to="/request-project" className={styles.ctaPrimary}>
+            <Link to="/signup/client" className={styles.ctaPrimary}>
               <FaRocket /> Start a Project
             </Link>
             <Link to="/signup/developer" className={styles.ctaSecondary}>

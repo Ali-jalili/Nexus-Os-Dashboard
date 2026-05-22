@@ -17,9 +17,13 @@ function Login() {
     e.preventDefault();
 
     try {
-      await handleLogin(email, password);
-      toast.success("ا موفقیت وارد شدید");
-      navigate("/app/admin");
+      const loggedInUser = await handleLogin(email, password);
+      const role = loggedInUser?.user_metadata?.role;
+
+      if (role === "admin") navigate("/app/admin");
+      else if (role === "client") navigate("/client-dashboard");
+      else if (role === "developer") navigate("/dev-dashboard");
+      else navigate("/");
     } catch (error) {
       toast.error(error.message);
     }

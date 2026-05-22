@@ -1,6 +1,5 @@
 /** @format */
 import { FaEnvelope } from "react-icons/fa";
-
 import useRequests from "../../Hook/useRequests";
 import StatCard from "../../ui/StatCard";
 import styles from "./RequestsInbox.module.css";
@@ -10,34 +9,20 @@ import { useQueryClient } from "@tanstack/react-query";
 
 function RequestsInbox() {
   const { data: requests } = useRequests();
-
   const queryClient = useQueryClient();
 
   async function handleApprove(req) {
-    const { data: clientData, error: clientError } = await supabase
-      .from("clients")
-      .insert({
-        full_name: req.client_name,
-        company_name: req.company_name,
-        contact_email: req.contact_email,
-        phone: req.phone,
-      })
-      .select("id")
-      .single();
-
-    if (clientError) return toast.error(clientError.message);
-
-    const clientId = clientData.id;
-
+    // ۱. ساخت پروژه جدید (clients با تریگر خودکار ساخته شده)
     const { error: projectError } = await supabase.from("projects").insert({
       title: req.project_description,
-      client_id: clientId,
+      client_id: req.client_id,
       status: "pending",
       budget: req.budget,
     });
 
     if (projectError) return toast.error(projectError.message);
 
+    // ۲. حذف درخواست از صندوق ورودی
     const { error: deleteError } = await supabase
       .from("requests")
       .delete()
@@ -46,7 +31,6 @@ function RequestsInbox() {
     if (deleteError) return toast.error(deleteError.message);
 
     toast.success("Request approved!");
-
     queryClient.invalidateQueries({ queryKey: ["requests"] });
   }
 
@@ -58,7 +42,7 @@ function RequestsInbox() {
 
     if (deleteError) return toast.error(deleteError.message);
 
-    toast.success("Request Reject!");
+    toast.success("Request rejected!");
     queryClient.invalidateQueries({ queryKey: ["requests"] });
   }
 

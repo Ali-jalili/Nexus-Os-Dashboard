@@ -22,7 +22,8 @@ function AuthProvider({ children }) {
     }
 
     setUser(data.user);
-    setRole(data.user.user_metadata?.role ?? "client");
+    setRole(data.user.user_metadata?.role ?? null);
+    return data.user;
   }
 
   async function handleLogout() {
@@ -32,16 +33,28 @@ function AuthProvider({ children }) {
   }
 
   useEffect(() => {
-    async function checkSession() {
-      await supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session) {
-          setUser(session.user);
-          setRole(session.user.user_metadata?.role ?? "client");
-        }
-      });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setRole(session.user.user_metadata?.role ?? null);
+      } else {
+        setUser(null);
+        setRole(null);
+      }
       setIsLoading(false);
-    }
-    checkSession();
+    });
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(session.user);
+        setRole(session.user.user_metadata?.role ?? null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => subscription?.unsubscribe();
   }, []);
 
   return (

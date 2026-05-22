@@ -4,6 +4,8 @@ import { useState } from "react";
 import styles from "./ProjectRequestForm.module.css";
 import toast from "react-hot-toast";
 import supabase from "../../services/supabase";
+import { useNavigate } from "react-router";
+import useAuth from "../../Hook/useAuth";
 
 function ProjectRequestForm() {
   const [clientName, setClientName] = useState("");
@@ -12,6 +14,10 @@ function ProjectRequestForm() {
   const [description, setDescription] = useState(null);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+
+  const { user } = useAuth();
+
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -22,6 +28,7 @@ function ProjectRequestForm() {
       budget: budget,
       contact_email: email,
       phone: phone,
+      client_id: user.id,
       project_description: description,
       status: "pending",
     });
@@ -30,6 +37,7 @@ function ProjectRequestForm() {
       toast.error(error.message);
     } else {
       toast.success("Request submitted successfully!");
+      navigate("/client-dashboard");
       setClientName("");
       setCompanyName("");
       setBudget("");
@@ -38,6 +46,8 @@ function ProjectRequestForm() {
       setDescription("");
     }
   }
+  console.log(user);
+  console.log("user.id:", user.id, "user.email:", user.email);
 
   return (
     <form className={styles.form}>

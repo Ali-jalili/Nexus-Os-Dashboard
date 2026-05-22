@@ -3,9 +3,9 @@ import styles from "./AppLayout.module.css";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../ui/Sidebar";
 import Header from "../ui/Header";
+// import Footer from "../ui/Footer";
 
 function AppLayout() {
-  console.log("svsv");
   return (
     <div className={styles.layout}>
       <Header />
@@ -14,6 +14,10 @@ function AppLayout() {
         <main className={styles.content}>
           <Outlet />
         </main>
+
+        {/* <footer>
+          <Footer />
+        </footer> */}
       </div>
     </div>
   );

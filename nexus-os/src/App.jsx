@@ -3,7 +3,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import HomePage from "./features/public-pages/HomePage";
-import JobApplicationForm from "./features/public-pages/JobApplicationForm";
 import ProjectRequestForm from "./features/public-pages/ProjectRequestForm";
 import Login from "./features/public-pages/Login";
 import AdminDashboard from "./features/admin-dashboard/AdminDashboard";
@@ -13,6 +12,7 @@ import ClientsList from "./features/clients/ClientsList";
 import CandidatesList from "./features/candidates/CandidatesList";
 import ClientView from "./features/client-portal/ClientView";
 import ProtectedRoute from "./app/ProtectedRoute";
+import RoleGate from "./app/RoleGate";
 import AppLayout from "./app/AppLayout";
 import ClientLayout from "./app/ClientLayout";
 import { Toaster } from "react-hot-toast";
@@ -23,89 +23,69 @@ import SignupDeveloperPage from "./features/public-pages/SignupDeveloperPage";
 import DeveloperView from "./features/developer-portal/DeveloperView";
 
 const routes = createBrowserRouter([
+  // ۱. صفحات عمومی (بدون محافظت)
   {
     element: <PublicLayout />,
     children: [
-      {
-        path: "get-started",
-        element: <GetStartedPage />,
-      },
-
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "/apply-job",
-        element: <JobApplicationForm />,
-      },
-      {
-        path: "/request-project",
-        element: <ProjectRequestForm />,
-      },
-      {
-        path: "/login",
-        element: <Login />,
-      },
-      {
-        path: "signup/client",
-        element: <SignupClientPage />,
-      },
-      {
-        path: "signup/developer",
-        element: <SignupDeveloperPage />,
-      },
+      { path: "get-started", element: <GetStartedPage /> },
+      { path: "/", element: <HomePage /> },
+      { path: "/request-project", element: <ProjectRequestForm /> },
+      { path: "/login", element: <Login /> },
+      { path: "signup/client", element: <SignupClientPage /> },
+      { path: "signup/developer", element: <SignupDeveloperPage /> },
     ],
   },
 
+  // ۲. پنل ادمین (محافظت دوگانه)
   {
     path: "/app",
     element: <ProtectedRoute />,
-
     children: [
       {
-        element: <AppLayout />,
+        element: <RoleGate />, // ← اضافه شد
         children: [
           {
-            path: "admin",
-            element: <AdminDashboard />,
-          },
-          {
-            path: "projects",
-            element: <ProjectsBoard />,
-          },
-          {
-            path: "requests",
-            element: <RequestsInbox />,
-          },
-          {
-            path: "clients",
-            element: <ClientsList />,
-          },
-          {
-            path: "candidates",
-            element: <CandidatesList />,
+            element: <AppLayout />,
+            children: [
+              { path: "admin", element: <AdminDashboard /> },
+              { path: "projects", element: <ProjectsBoard /> },
+              { path: "requests", element: <RequestsInbox /> },
+              { path: "clients", element: <ClientsList /> },
+              { path: "candidates", element: <CandidatesList /> },
+            ],
           },
         ],
       },
     ],
   },
 
+  // ۳. پورتال مشتری (محافظت دوگانه)
   {
     path: "/client-dashboard",
     element: <ProtectedRoute />,
     children: [
       {
-        element: <ClientLayout />,
-        children: [{ index: true, element: <ClientView /> }],
+        element: <RoleGate />, // ← اضافه شد
+        children: [
+          {
+            element: <ClientLayout />,
+            children: [{ index: true, element: <ClientView /> }],
+          },
+        ],
       },
     ],
   },
 
+  // ۴. پورتال توسعه‌دهنده (محافظت دوگانه)
   {
     path: "/dev-dashboard",
     element: <ProtectedRoute />,
-    children: [{ index: true, element: <DeveloperView /> }],
+    children: [
+      {
+        element: <RoleGate />, // ← اضافه شد
+        children: [{ index: true, element: <DeveloperView /> }],
+      },
+    ],
   },
 ]);
 

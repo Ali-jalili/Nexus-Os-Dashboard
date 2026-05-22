@@ -1,0 +1,38 @@
+.footer {
+  border-top: 1px solid var(--border-primary);
+  padding: 1.5rem 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.copy {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.version {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-tertiary);
+  background: var(--bg-secondary);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 480px) {
+  .inner {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+}
