@@ -1,0 +1,4 @@
+.statItem { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 0.25rem; }
+.statIcon { font-size: 1.5rem; color: var(--accent-primary); margin-bottom: 0.5rem; }
+.statNumber { font-size: 2.5rem; font-weight: 900; color: var(--accent-primary); }
+.statLabel { font-size: 0.9rem; color: var(--text-tertiary); }

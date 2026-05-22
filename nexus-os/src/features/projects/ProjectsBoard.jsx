@@ -143,7 +143,7 @@ function ProjectsBoard() {
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Developer</span>
                 <span className={styles.metaValue}>
-                  {item.developer_id || "Not Assigned"}
+                  {item.full_name || "Not Assigned"}
                 </span>
               </div>
 

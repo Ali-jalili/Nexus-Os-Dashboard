@@ -1,50 +1,70 @@
 /* ===========================
-   Nexus Design System 1.0
-   تم: Modern Dark
+   Nexus Design System 4.0 – Final
+   تم: Neutral Professional Light
 =========================== */
 
-/* ۱. فعال‌سازی تم پیش‌فرض تاریک */
-:root .dark,
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 :root {
-  /* ---------- رنگ‌های اصلی پس‌زمینه ---------- */
-  --bg-primary: #0D0F12;      /* پس‌زمینه اصلی */
-  --bg-secondary: #15181D;    /* پس‌زمینه کارت‌ها و سایدبار */
-  --bg-elevated: #1C2026;     /* پس‌زمینه hover و modal */
-  --border-primary: #252A31;  /* خطوط جداکننده */
+  /* ---------- پس‌زمینه‌ها ---------- */
+  --bg-body: #e8ecf1;
+  --bg-primary: #f0f3f7;
+  --bg-secondary: #e3e7ef;
+  --bg-elevated: #d9dee8;
 
-  /* ---------- رنگ‌های متن ---------- */
-  --text-primary: #F4F5F6;    /* متن اصلی */
-  --text-secondary: #A1A5AB;  /* متن فرعی */
-  --text-tertiary: #5C6168;   /* متن غیرفعال و placeholder */
+  /* ---------- خطوط ---------- */
+  --border-primary: #cdd3de;
+  --border-subtle: #dce1e9;
 
-  /* ---------- رنگ‌های تاکیدی (Accent) ---------- */
-  --accent-primary: #3B82F6;  /* دکمه‌ها و لینک‌ها */
-  --accent-hover: #2563EB;    /* حالت hover */
-  --accent-subtle: rgba(59,130,246,0.08); /* پس‌زمینه بسیار کم‌رنگ */
+  /* ---------- متن ---------- */
+  --text-primary: #1a1f2e;
+  --text-secondary: #4a5162;
+  --text-tertiary: #6e7687;
 
-  /* ---------- رنگ‌های وضعیت (Semantic) ---------- */
-  --success: #10B981;         /* موفقیت‌آمیز */
-  --warning: #F59E0B;         /* هشدار */
-  --error: #EF4444;           /* خطا */
-  --info: #6366F1;            /* اطلاع‌رسانی */
+  /* ---------- رنگ تأکیدی اصلی (آبی) ---------- */
+  --accent-primary: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-subtle: rgba(37, 99, 235, 0.08);
+
+  /* ---------- رنگ تأکیدی دوم (گرم) ---------- */
+  --accent-warm: #f59e0b;
+  --accent-warm-subtle: rgba(245, 158, 11, 0.08);
+
+  /* ---------- رنگ‌های وضعیت ---------- */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
 
   /* ---------- تایپوگرافی ---------- */
   --font-primary: 'Inter', sans-serif;
-  --font-persian: 'Vazirmatn', sans-serif;
+  --font-display: 'Inter', sans-serif;
 
-  /* ---------- اندازه‌ها و فرم‌ها ---------- */
-  --radius-sm: 6px;           /* گردی inputها */
-  --radius-md: 8px;           /* گردی کارت‌ها و دکمه‌ها */
-  --radius-lg: 12px;          /* گردی modalها */
+  /* ---------- گردی‌ها ---------- */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
 
   /* ---------- سایه‌ها ---------- */
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.4);
-  --shadow-modal: 0 20px 60px rgba(0,0,0,0.6);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --shadow-colored: 0 8px 24px rgba(37, 99, 235, 0.12);
 }
+
+/* ریست کلی */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 body {
-  background-color: var(--bg-primary);
+  background-color: var(--bg-body);
   color: var(--text-primary);
   font-family: var(--font-primary);
   margin: 0;
   padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

@@ -11,6 +11,8 @@
 }
 
 .content {
+    background-color: var(--bg-body); /* از پس‌زمینه body پیروی کنه، نه bg-primary */
+
   flex: 1;
   padding: 2rem;
   background-color: var(--bg-primary);
