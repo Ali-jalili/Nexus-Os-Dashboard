@@ -19,28 +19,6 @@ function ProjectsBoard() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  let filteredProjects = projectData || [];
-
-  if (search) {
-    filteredProjects = filteredProjects.filter((item) =>
-      item.title.toLowerCase().includes(search.toLowerCase()),
-    );
-  }
-
-  if (statusFilter !== "all") {
-    filteredProjects.filter((item) => item.status === statusFilter);
-  }
-
-  // const sortedProjects = [...filteredProjects].sort((a, b) => {
-  //   if (sortBy === "newest")
-  //     return new Date(b.created_at) - new Date(a.created_at);
-  //   if (sortBy === "oldest")
-  //     return new Date(a.created_at) - new Date(b.created_at);
-  //   if (sortBy === "budget_high") return b.budget - a.budget;
-  //   if (sortBy === "budget_low") return a.budget - b.budget;
-  //   return 0;
-  // });
-
   const sortedProjects = useMemo(() => {
     let result = projectData || [];
 
@@ -171,7 +149,7 @@ function ProjectsBoard() {
 
               <select
                 value={item.developer_id || ""}
-                onChange={(e) => handleAssign(item.id, e.target.value)}
+                onChange={(e) => handleAssign(e.target.value, item.id)}
               >
                 <option value="">Not Assigned</option>
                 {developersData?.map((dev) => (
