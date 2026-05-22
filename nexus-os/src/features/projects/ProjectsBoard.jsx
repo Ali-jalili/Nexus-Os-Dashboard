@@ -1,24 +1,25 @@
 /** @format */
+import { useMemo } from "react";
 
 import { useState } from "react";
 import styles from "./ProjectsBoard.module.css";
-
 import useProjects from "../../Hook/useProjects";
+import useDevelopers from "../../Hook/useDevelopers";
+import supabase from "../../services/supabase";
+import toast from "react-hot-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 function ProjectsBoard() {
-  const { data } = useProjects();
-  console.log(data);
+  const queryClient = useQueryClient();
+  const { data: projectData } = useProjects();
+  const { data: developersData } = useDevelopers();
+  const [editingProject, setEditingProject] = useState(null);
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
 
-  function handleSearch(e) {
-    const value = e.target.value;
-    setSearch(value);
-  }
-
-  let filteredProjects = data || [];
+  let filteredProjects = projectData || [];
 
   if (search) {
     filteredProjects = filteredProjects.filter((item) =>
@@ -27,20 +28,42 @@ function ProjectsBoard() {
   }
 
   if (statusFilter !== "all") {
-    filteredProjects = filteredProjects.filter(
-      (item) => item.status === statusFilter,
-    );
+    filteredProjects.filter((item) => item.status === statusFilter);
   }
 
-  const sortedProjects = [...filteredProjects].sort((a, b) => {
-    if (sortBy === "newest")
-      return new Date(b.created_at) - new Date(a.created_at);
-    if (sortBy === "oldest")
-      return new Date(a.created_at) - new Date(b.created_at);
-    if (sortBy === "budget_high") return b.budget - a.budget;
-    if (sortBy === "budget_low") return a.budget - b.budget;
-    return 0;
-  });
+  // const sortedProjects = [...filteredProjects].sort((a, b) => {
+  //   if (sortBy === "newest")
+  //     return new Date(b.created_at) - new Date(a.created_at);
+  //   if (sortBy === "oldest")
+  //     return new Date(a.created_at) - new Date(b.created_at);
+  //   if (sortBy === "budget_high") return b.budget - a.budget;
+  //   if (sortBy === "budget_low") return a.budget - b.budget;
+  //   return 0;
+  // });
+
+  const sortedProjects = useMemo(() => {
+    let result = projectData || [];
+
+    if (search) {
+      result = result.filter((item) =>
+        item.title.toLowerCase().includes(search.toLowerCase()),
+      );
+    }
+
+    if (statusFilter !== "all") {
+      result = result.filter((item) => item.status === statusFilter);
+    }
+
+    return [...result].sort((a, b) => {
+      if (sortBy === "newest")
+        return new Date(b.created_at) - new Date(a.created_at);
+      if (sortBy === "oldest")
+        return new Date(a.created_at) - new Date(b.created_at);
+      if (sortBy === "budget_high") return b.budget - a.budget;
+      if (sortBy === "budget_low") return a.budget - b.budget;
+      return 0;
+    });
+  }, [projectData, search, statusFilter, sortBy]);
 
   function getStatusClass(status) {
     if (status === "pending") return styles.pending;
@@ -49,8 +72,36 @@ function ProjectsBoard() {
     return styles.inProgress;
   }
 
+  async function handleAssign(developerId, projectId) {
+    const { error } = await supabase
+      .from("projects")
+      .update({ developer_id: developerId })
+      .eq("id", projectId);
+
+    if (error) return toast.error(error.message);
+    toast.success("Developer assigned successfully!");
+
+    queryClient.invalidateQueries({ queryKey: ["projects"] });
+  }
+
+  async function handleUpdate() {
+    const { error } = await supabase
+      .from("projects")
+      .update({
+        status: editingProject.status,
+        progress: editingProject.progress,
+      })
+      .eq("id", editingProject.id);
+
+    if (error) return toast.error(error.message);
+    toast.success("Project updated!");
+    setEditingProject(null);
+    queryClient.invalidateQueries({ queryKey: ["projects"] });
+  }
+
   return (
     <div className={styles.board}>
+      {/* هدر */}
       <div className={styles.header}>
         <h1>Projects Board</h1>
         <button className={styles.addBtn} disabled>
@@ -58,10 +109,11 @@ function ProjectsBoard() {
         </button>
       </div>
 
+      {/* نوار ابزار */}
       <div className={styles.toolbar}>
         <input
-          onChange={(e) => handleSearch(e)}
           value={search}
+          onChange={(e) => setSearch(e.target.value)}
           type="text"
           placeholder="Search projects..."
           className={styles.searchInput}
@@ -88,50 +140,124 @@ function ProjectsBoard() {
         </select>
       </div>
 
-      <div className={styles.tableWrapper}>
-        <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Project Title</th>
-              <th>Client</th>
-              <th>Status</th>
-              <th>Budget</th>
-              <th>Progress</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedProjects?.map((item) => (
-              <tr key={item.id}>
-                <td> {item.title} </td>
-                <td>{item.client_id}</td>
+      {/* کارت‌های پروژه */}
+      <div className={styles.grid}>
+        {sortedProjects?.map((item) => (
+          <div key={item.id} className={styles.card}>
+            <div className={styles.cardHeader}>
+              <h3 className={styles.cardTitle}>{item.title}</h3>
+              <span
+                className={`${styles.badge} ${getStatusClass(item.status)}`}
+              >
+                {item.status}
+              </span>
+            </div>
 
-                <td>
-                  <span
-                    className={`${styles.badge} ${getStatusClass(item.status)}`}
-                  >
-                    {item.status}
-                  </span>
-                </td>
+            <div className={styles.cardBody}>
+              <div className={styles.meta}>
+                <span className={styles.metaLabel}>Client</span>
+                <span className={styles.metaValue}>{item.title}</span>
+              </div>
+              <div className={styles.meta}>
+                <span className={styles.metaLabel}>Budget</span>
+                <span className={styles.metaValue}>${item.budget ?? "-"}</span>
+              </div>
+              <div className={styles.meta}>
+                <span className={styles.metaLabel}>Developer</span>
+                <span className={styles.metaValue}>
+                  {item.developer_id || "Not Assigned"}
+                </span>
+              </div>
 
-                <td>$ {item.budget} </td>
-                <td>
-                  <div className={styles.progressBar}>
-                    <div
-                      className={styles.progressFill}
-                      style={{ width: `${item.progress ?? 0}%` }}
-                    />
-                  </div>
-                </td>
+              <select
+                value={item.developer_id || ""}
+                onChange={(e) => handleAssign(item.id, e.target.value)}
+              >
+                <option value="">Not Assigned</option>
+                {developersData?.map((dev) => (
+                  <option key={dev.id} value={dev.id}>
+                    {dev.full_name}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-                <td>
-                  <button className={styles.actionBtn}>Edit</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+            <div className={styles.cardFooter}>
+              <div className={styles.progressWrapper}>
+                <div className={styles.progressBar}>
+                  <div
+                    className={styles.progressFill}
+                    style={{ width: `${item.progress ?? 0}%` }}
+                  />
+                </div>
+                <span className={styles.progressText}>
+                  {item.progress ?? 0}%
+                </span>
+              </div>
+              <button
+                className={styles.actionBtn}
+                onClick={() => setEditingProject(item)}
+              >
+                Edit
+              </button>
+            </div>
+          </div>
+        ))}
       </div>
+
+      {/* Modal ویرایش پروژه */}
+      {editingProject && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setEditingProject(null)}
+        >
+          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+            <h3>Edit Project</h3>
+            <div className={styles.formGroup}>
+              <label>Status</label>
+              <select
+                value={editingProject.status}
+                onChange={(e) =>
+                  setEditingProject({
+                    ...editingProject,
+                    status: e.target.value,
+                  })
+                }
+              >
+                <option value="pending">Pending</option>
+                <option value="in_progress">In Progress</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+            <div className={styles.formGroup}>
+              <label>Progress (%)</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={editingProject.progress}
+                onChange={(e) =>
+                  setEditingProject({
+                    ...editingProject,
+                    progress: Number(e.target.value),
+                  })
+                }
+              />
+            </div>
+            <div className={styles.modalActions}>
+              <button
+                className={styles.cancelBtn}
+                onClick={() => setEditingProject(null)}
+              >
+                Cancel
+              </button>
+              <button className={styles.saveBtn} onClick={handleUpdate}>
+                Save Changes
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -20,6 +20,7 @@ import PublicLayout from "./app/PublicLayout";
 import GetStartedPage from "./features/public-pages/GetStartedPage";
 import SignupClientPage from "./features/public-pages/SignupClientPage";
 import SignupDeveloperPage from "./features/public-pages/SignupDeveloperPage";
+import DeveloperView from "./features/developer-portal/DeveloperView";
 
 const routes = createBrowserRouter([
   {
@@ -99,6 +100,12 @@ const routes = createBrowserRouter([
         children: [{ index: true, element: <ClientView /> }],
       },
     ],
+  },
+
+  {
+    path: "/dev-dashboard",
+    element: <ProtectedRoute />,
+    children: [{ index: true, element: <DeveloperView /> }],
   },
 ]);
 

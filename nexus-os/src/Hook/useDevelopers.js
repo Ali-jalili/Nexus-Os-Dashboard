@@ -3,20 +3,20 @@
 import { useQuery } from "@tanstack/react-query";
 import supabase from "../services/supabase";
 
-function useCandidates() {
-  async function fetchCandidates() {
-    const { data, error } = await supabase.from("candidates").select("*");
+function useDevelopers() {
+  async function fetchDevelopers() {
+    const { data, error } = await supabase.from("developers").select("*");
 
     if (error) throw new Error(error.message);
     return data;
   }
 
   const { data, isLoading, error } = useQuery({
-    queryFn: fetchCandidates,
-    queryKey: ["candidates"],
+    queryFn: fetchDevelopers,
+    queryKey: ["developers"],
   });
 
   return { data, isLoading, error };
 }
 
-export default useCandidates;
+export default useDevelopers;

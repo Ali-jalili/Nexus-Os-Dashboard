@@ -16,7 +16,6 @@ function CandidatesList() {
         full_name: item.full_name,
         email: item.email,
         specialty: item.specialty,
-        resume_url: item.resume_url,
       });
 
     if (candidateError) return toast.error(candidateError.message);

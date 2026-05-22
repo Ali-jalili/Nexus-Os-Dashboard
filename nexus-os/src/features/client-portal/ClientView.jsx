@@ -2,6 +2,7 @@
 import useAuth from "../../Hook/useAuth";
 import { Link } from "react-router-dom";
 import useClientProjects from "../../Hook/useClientProjects";
+import Spinner from "../../ui/Spinner";
 
 function ClientView() {
   const { user } = useAuth();
@@ -14,7 +15,7 @@ function ClientView() {
 
       <div>
         <h2>Your Projects</h2>
-        {isLoading && <p>Loading...</p>}
+        {isLoading && <Spinner />}
         {error && <p>Error: {error.message}</p>}
         {clientProjects?.length === 0 && <p>No projects yet.</p>}
         <ul>
