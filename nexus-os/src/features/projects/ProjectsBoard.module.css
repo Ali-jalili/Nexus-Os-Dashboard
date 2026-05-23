@@ -93,6 +93,11 @@
   color: var(--text-primary);
   margin: 0;
   line-height: 1.4;
+   overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
 .cardBody {
@@ -195,6 +200,16 @@
   white-space: nowrap;
 }
 
+.devSelect {
+  width: 100%;
+  padding: 0.5rem;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
 .actionBtn:hover {
   background-color: var(--bg-elevated);
   color: var(--text-primary);
@@ -286,6 +301,15 @@
 
 /* ریسپانسیو */
 @media (max-width: 768px) {
+
+  .card {
+    padding: 1rem;
+  }
+  
+  .modalActions {
+    flex-direction: column;
+  }
+  
   .toolbar {
     flex-wrap: wrap;
   }

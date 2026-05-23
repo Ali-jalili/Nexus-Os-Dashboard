@@ -8,9 +8,12 @@ import useDevelopers from "../../Hook/useDevelopers";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import useClients from "../../Hook/useClients";
 
 function ProjectsBoard() {
   const queryClient = useQueryClient();
+  const { data: clientsData } = useClients();
+
   const { data: projectData } = useProjects();
   const { data: developersData } = useDevelopers();
   const [editingProject, setEditingProject] = useState(null);
@@ -82,6 +85,11 @@ function ProjectsBoard() {
     return dev?.full_name || "Not Assigned";
   };
 
+  const getClientName = (clientId) => {
+    const client = clientsData?.find((c) => c.id === clientId);
+    return client?.full_name || "N/A";
+  };
+
   return (
     <div className={styles.board}>
       {/* هدر */}
@@ -128,7 +136,9 @@ function ProjectsBoard() {
         {sortedProjects?.map((item) => (
           <div key={item.id} className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>{item.title}</h3>
+              <h3 className={styles.cardTitle} title={item.title}>
+                {item.title}
+              </h3>
               <span
                 className={`${styles.badge} ${getStatusClass(item.status)}`}
               >
@@ -139,7 +149,9 @@ function ProjectsBoard() {
             <div className={styles.cardBody}>
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Client</span>
-                <span className={styles.metaValue}>{item.title}</span>
+                <span className={styles.metaValue}>
+                  {getClientName(item.client_id)}
+                </span>
               </div>
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Budget</span>
@@ -153,6 +165,7 @@ function ProjectsBoard() {
               </div>
 
               <select
+                className={styles.devSelect}
                 value={item.developer_id || ""}
                 onChange={(e) => handleAssign(e.target.value, item.id)}
               >

@@ -1,24 +1,82 @@
 /** @format */
-import styles from "./AppLayout.module.css";
+
+// /** @format */
+
+// import { Outlet } from "react-router-dom";
+// import Sidebar from "../ui/Sidebar";
+// import Header from "../ui/Header";
+// import styles from "./AppLayout.module.css";
+
+// function AppLayout() {
+//   return (
+//     <div className={styles.layout}>
+//       <Header showSidebarToggle={true} />
+//       <div className={styles.main}>
+//         <Sidebar />
+//         <main className={styles.content}>
+//           <Outlet />
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default AppLayout;
+
+/** @format */
+
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "../ui/Sidebar";
 import Header from "../ui/Header";
-// import Footer from "../ui/Footer";
+import styles from "./AppLayout.module.css";
 
 function AppLayout() {
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      // تو موبایل سایدبار پیش‌فرض بسته، تو دسکتاپ باز
+      setSidebarOpen(!mobile);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  function toggleSidebar() {
+    setSidebarOpen((prev) => !prev);
+  }
+
+  function closeSidebar() {
+    setSidebarOpen(false);
+  }
+
   return (
     <div className={styles.layout}>
-      <Header />
+      <Header
+        showSidebarToggle={true}
+        onToggleSidebar={toggleSidebar}
+        isSidebarOpen={sidebarOpen}
+      />
       <div className={styles.main}>
-        <Sidebar />
+        <Sidebar
+          isOpen={sidebarOpen}
+          isMobile={isMobile}
+          onClose={closeSidebar}
+          onToggle={toggleSidebar}
+        />
         <main className={styles.content}>
           <Outlet />
         </main>
-
-        {/* <footer>
-          <Footer />
-        </footer> */}
       </div>
+      {/* Overlay برای موبایل */}
+      {isMobile && sidebarOpen && (
+        <div className={styles.overlay} onClick={closeSidebar} />
+      )}
     </div>
   );
 }

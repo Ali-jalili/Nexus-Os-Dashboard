@@ -1,3 +1,121 @@
+/* .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 2rem;
+  height: 64px;
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-primary);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(8px);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logoIcon {
+  font-size: 1.25rem;
+  color: var(--accent-primary);
+}
+
+.title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.3px;
+  text-decoration: none;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.link {
+  padding: 0.5rem 1rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.link:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.logoutBtn {
+  padding: 0.5rem 1.25rem;
+  background-color: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background-color: var(--bg-elevated);
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.sidebarToggleSpace {
+  width: 48px;
+  height: 100%;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .sidebarToggleSpace {
+    display: block;
+  }
+} */
+
+/* Responsive */
+/* @media (max-width: 768px) {
+  .header {
+    padding: 0 1rem;
+  }
+
+  .title {
+    font-size: 1rem;
+  }
+
+  .actions {
+    gap: 0.5rem;
+  }
+
+  .link,
+  .logoutBtn {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: 56px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+} */
+
+
+
+
 .header {
   display: flex;
   justify-content: space-between;
@@ -16,6 +134,33 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.sidebarToggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.25rem;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+}
+
+.sidebarToggle:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* تو موبایل دکمه همیشه نشون داده بشه */
+@media (max-width: 768px) {
+  .sidebarToggle {
+    display: flex;
+  }
 }
 
 .logoIcon {

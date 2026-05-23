@@ -1,14 +1,22 @@
+.wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
 .form {
-  max-width: 440px;
-  margin: 3rem auto;
-  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
   background: var(--bg-primary);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
+  padding: 2.5rem;
   box-shadow: var(--shadow-md);
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1.25rem;
 }
 
 .heading {
@@ -16,6 +24,13 @@
   font-weight: 700;
   color: var(--text-primary);
   text-align: center;
+  margin: 0;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
   margin: 0 0 0.5rem;
 }
 
@@ -31,8 +46,22 @@
   color: var(--text-secondary);
 }
 
-.field input {
-  padding: 0.65rem 0.85rem;
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.6rem 0.85rem 0.6rem 2.5rem;
   background: var(--bg-body);
   border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
@@ -41,14 +70,14 @@
   transition: border-color 0.15s ease;
 }
 
-.field input:focus {
+.inputWrapper input:focus {
   outline: none;
   border-color: var(--accent-primary);
   box-shadow: 0 0 0 3px var(--accent-subtle);
 }
 
 .submitBtn {
-  padding: 0.75rem;
+  padding: 0.7rem;
   background: var(--accent-primary);
   color: white;
   border: none;
@@ -57,33 +86,18 @@
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s ease;
-  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-
-.submitBtn:hover {
-  background: var(--accent-hover);
-}
-
-.footerText {
-  text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-tertiary);
-}
-
-.footerText a {
-  color: var(--accent-primary);
-  text-decoration: none;
-  font-weight: 600;
-}
-
-.footerText a:hover {
-  text-decoration: underline;
-}
-
 
 .submitBtn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
+}
+
+.submitBtn:hover:not(:disabled) {
+  background: var(--accent-hover);
 }
 
 .spinner {
@@ -92,4 +106,20 @@
 
 @keyframes spin {
   to { transform: rotate(360deg); }
+}
+
+.footerText {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
 }

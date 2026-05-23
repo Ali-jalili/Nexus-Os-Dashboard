@@ -1,10 +1,18 @@
 /** @format */
-
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import useAuth from "../../Hook/useAuth";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router";
-import useAuth from "../../Hook/useAuth";
+import {
+  FaUser,
+  FaEnvelope,
+  FaLock,
+  FaCode,
+  FaLink,
+  FaSpinner,
+} from "react-icons/fa";
+import styles from "./SignupDeveloperPage.module.css";
 
 function SignupDeveloperPage() {
   const [name, setName] = useState("");
@@ -12,27 +20,26 @@ function SignupDeveloperPage() {
   const [password, setPassword] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [resumeUrl, setResumeUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { handleLogout } = useAuth();
-
-  let navigate = useNavigate();
+  const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
     const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-      options: {
-        data: {
-          full_name: name,
-          role: "developer",
-        },
-      },
+      email,
+      password,
+      options: { data: { full_name: name, role: "developer" } },
     });
 
-    if (error) return toast.error(error.message);
-    console.log("data.user:", data.user);
+    if (error) {
+      toast.error(error.message);
+      setIsLoading(false);
+      return;
+    }
+
     if (data.user) {
-      // ذخیره رزومه در جدول candidates
       const { error: insertError } = await supabase.from("candidates").insert({
         full_name: name,
         email: email,
@@ -40,70 +47,117 @@ function SignupDeveloperPage() {
         resume_url: resumeUrl,
       });
 
-      if (insertError) return toast.error(insertError.message);
+      if (insertError) {
+        toast.error(insertError.message);
+        setIsLoading(false);
+        return;
+      }
 
-      toast.success("Account created and resume submitted!");
+      toast.success("Application submitted! We'll contact you soon.");
       await handleLogout();
       navigate("/");
+      setIsLoading(false);
     }
+    setIsLoading(false);
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label htmlFor="devName">Name</label>
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          type="text"
-          id="devName"
-          placeholder="Enter your full name"
-        />
-      </div>
-      <div>
-        <label htmlFor="devEmail">Email</label>
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          type="email"
-          id="devEmail"
-          placeholder="Enter your full email"
-        />
-      </div>
+    <div className={styles.wrapper}>
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <h1 className={styles.heading}>Apply as a Developer</h1>
+        <p className={styles.subtitle}>Submit your resume and join our team</p>
 
-      <div>
-        <label htmlFor="devPassword">Password</label>
-        <input
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          type="password"
-          id="devPassword"
-          placeholder="Enter your Password"
-        />
-      </div>
-      <div>
-        <label htmlFor="devSpecialty">Specialty</label>
-        <input
-          value={specialty}
-          onChange={(e) => setSpecialty(e.target.value)}
-          type="text"
-          id="devSpecialty"
-          placeholder="e.g. Frontend Developer"
-        />
-      </div>
+        <div className={styles.field}>
+          <label htmlFor="name">Full Name</label>
+          <div className={styles.inputWrapper}>
+            <FaUser className={styles.inputIcon} />
+            <input
+              id="name"
+              type="text"
+              placeholder="Ali Rezaei"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
 
-      <div>
-        <label htmlFor="devResumeUrl">ResumeUrl</label>
-        <input
-          value={resumeUrl}
-          onChange={(e) => setResumeUrl(e.target.value)}
-          type="text"
-          id="devResumeUrl"
-          placeholder="Enter your full ResumeUrl"
-        />
-      </div>
-      <button type="submit">Create Account</button>
-    </form>
+        <div className={styles.field}>
+          <label htmlFor="email">Email</label>
+          <div className={styles.inputWrapper}>
+            <FaEnvelope className={styles.inputIcon} />
+            <input
+              id="email"
+              type="email"
+              placeholder="ali@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="specialty">Specialty</label>
+          <div className={styles.inputWrapper}>
+            <FaCode className={styles.inputIcon} />
+            <input
+              id="specialty"
+              type="text"
+              placeholder="e.g. Frontend Developer"
+              value={specialty}
+              onChange={(e) => setSpecialty(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="resumeUrl">Resume URL</label>
+          <div className={styles.inputWrapper}>
+            <FaLink className={styles.inputIcon} />
+            <input
+              id="resumeUrl"
+              type="url"
+              placeholder="https://your-resume.com"
+              value={resumeUrl}
+              onChange={(e) => setResumeUrl(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className={styles.field}>
+          <label htmlFor="password">Password</label>
+          <div className={styles.inputWrapper}>
+            <FaLock className={styles.inputIcon} />
+            <input
+              id="password"
+              type="password"
+              placeholder="Min. 6 characters"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <button className={styles.submitBtn} type="submit" disabled={isLoading}>
+          {isLoading ? (
+            <FaSpinner className={styles.spinner} />
+          ) : (
+            "Submit Application"
+          )}
+        </button>
+
+        <p className={styles.footerText}>
+          Already have an account?{" "}
+          <Link to="/login" className={styles.link}>
+            Log in
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }
 

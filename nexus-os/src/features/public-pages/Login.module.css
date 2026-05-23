@@ -1,0 +1,263 @@
+.wrapper {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.form {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.heading {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-align: center;
+  margin: 0;
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.field label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.65rem 0.85rem 0.65rem 2.5rem;
+  background: var(--bg-body);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  transition: border-color 0.15s ease;
+}
+
+.inputWrapper input:focus {
+  outline: none;
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.submitBtn {
+  padding: 0.75rem;
+  background: var(--accent-primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.submitBtn:hover {
+  background: var(--accent-hover);.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.forgotWrapper {
+  text-align: right;
+}
+
+.forgotLink {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+
+.forgotLink:hover {
+  color: var(--accent-primary);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-primary);
+}
+
+.socialBtns {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg-body);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.socialBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+}
+
+.footerText {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.link {
+  color: var(--accent-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.forgotWrapper {
+  text-align: right;
+}
+
+.forgotLink {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  cursor: pointer;
+}
+
+.forgotLink:hover {
+  color: var(--accent-primary);
+}
+
+.separator {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+}
+
+.separator::before,
+.separator::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--border-primary);
+}
+
+.socialBtns {
+  display: flex;
+  gap: 1rem;
+}
+
+.socialBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  background: var(--bg-body);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.socialBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

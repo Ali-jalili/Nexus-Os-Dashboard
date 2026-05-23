@@ -1,22 +1,265 @@
-.sidebar {
-  width: 250px;
+/* ========== دکمه همبرگری (مخفی در دسکتاپ) ========== */
+/* .menuBtn {
+  display: none;
+  position: fixed;
+  top: 80px;
+  left: 16px;
+  z-index: 300;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+} */
+
+/* ========== سایدبار ========== */
+/* .sidebar {
+  width: 260px;
   background-color: var(--bg-secondary);
   border-right: 1px solid var(--border-primary);
-  padding: 1.5rem 1rem;
   display: flex;
   flex-direction: column;
+  height: 100vh;
+  flex-shrink: 0;
+  transition: width 0.3s ease, transform 0.3s ease;
+  position: relative;
+} */
+
+/* حالت جمع‌شده در دسکتاپ */
+/* .collapsed {
+  width: 68px;
+}
+
+.collapsed .brandText,
+.collapsed .link span,
+.collapsed .logout span {
+  display: none;
+} */
+
+/* ========== برند ========== */
+/* .brand {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+  padding: 1.5rem 1rem;
+  border-bottom: 1px solid var(--border-primary);
+}
+.brandIcon { font-size: 1.3rem; color: var(--accent-primary); }
+.brandText { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+
+.collapseBtn {
+  display: none;
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  font-size: 1.1rem;
+}
+
+
+.nav {
+  flex: 1;
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  overflow-y: auto;
 }
 
 .link {
-  display: block;
-  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
   color: var(--text-secondary);
   text-decoration: none;
   border-radius: var(--radius-md);
   font-size: 0.9rem;
   font-weight: 500;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+.link:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.active { background: var(--accent-subtle); color: var(--accent-primary); }
+.icon { font-size: 1.1rem; flex-shrink: 0; } */
+
+/* ========== دکمه خروج ========== */
+/* .logout {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  margin: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.15s;
+  white-space: nowrap;
+}
+.logout:hover { background: var(--bg-elevated); color: var(--error); border-color: var(--error); } */
+
+/* ========== دسکتاپ: دکمه Collapse ========== */
+/* @media (min-width: 769px) {
+  .collapseBtn {
+    display: block;
+  }
+} */
+
+/* ========== موبایل ========== */
+/* @media (max-width: 768px) {
+  .menuBtn {
+    display: block;
+  }
+
+  .collapseBtn {
+    display: none;
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    height: 100vh;
+    transform: translateX(-100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .collapsed {
+    width: 260px;
+  }
+} */
+
+.sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100%;
+  background-color: var(--bg-secondary);
+  border-right: 1px solid var(--border-primary);
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0.75rem;
+  transition: all 0.3s ease;
+  overflow-x: hidden;
+  z-index: 95;
+  position: relative;
+}
+
+/* حالت جمع شده (دسکتاپ) */
+.collapsed {
+  width: 64px;
+  min-width: 64px;
+}
+
+/* حالت موبایل (overlay) */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 64px;
+    left: -100%;
+    height: calc(100vh - 64px);
+    z-index: 95;
+    box-shadow: 4px 0 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .sidebar.open {
+    left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar {
+    top: 56px;
+    height: calc(100vh - 56px);
+  }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.5rem 0.5rem 1rem;
+  border-bottom: 1px solid var(--border-primary);
+  margin-bottom: 1rem;
+}
+
+.collapsed .brand {
+  justify-content: center;
+  padding: 0.5rem 0 1rem;
+}
+
+.brandIcon {
+  font-size: 1.25rem;
+  color: var(--accent-primary);
+  flex-shrink: 0;
+}
+
+.brandText {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.collapseBtn {
+  position: absolute;
+  right: -12px;
+  top: 36px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 96;
+  padding: 0;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  outline: 2px solid var(--bg-secondary);
   transition: all 0.15s ease;
+}
+
+.collapseBtn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.rotated {
+  transform: rotate(180deg);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+  white-space: nowrap;
 }
 
 .link:hover {
@@ -25,6 +268,33 @@
 }
 
 .active {
-  background-color: var(--accent-subtle);
-  color: var(--accent-primary);
+  background-color: var(--accent-bg, rgba(59, 130, 246, 0.1));
+  color: var(--accent-primary) !important;
+}
+
+.icon {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.75rem;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  margin-top: auto;
+}
+
+.logout:hover {
+  background-color: var(--bg-elevated);
+  color: var(--error);
 }

@@ -1,26 +1,160 @@
+.inbox {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 
-.tableWrapper {
+.heading {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ========== گرید کارت‌ها ========== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+}
+
+/* ========== کارت ========== */
+.card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+.clientName {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 100px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--warning);
+}
+
+.description {
+  color: var(--text-primary);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  word-break: break-word;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.expanded {
+  -webkit-line-clamp: unset;
+  overflow: visible;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1rem;
+  text-align: center;
   background: var(--bg-secondary);
   border: 1px solid var(--border-primary);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
+  border-radius: var(--radius-lg);
 }
 
-.table {
-  width: 100%;
-  border-collapse: collapse;
+.emptyIcon {
+  font-size: 2.5rem;
+  color: var(--text-tertiary);
+  margin-bottom: 1rem;
 }
 
-.table th,
-.table td {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid var(--border-primary);
-  color: var(--text-primary);
-}
-
-.table th {
+.empty p {
   color: var(--text-secondary);
-  font-weight: 600;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.budget {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin: 0;
+}
+
+.date {
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.approveBtn,
+.rejectBtn {
+  flex: 1;
+  padding: 0.5rem;
+  border-radius: var(--radius-md);
   font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.approveBtn {
+  background: var(--success);
+  color: white;
+}
+
+.approveBtn:hover {
+  filter: brightness(1.1);
+}
+
+.rejectBtn {
+  background: transparent;
+  color: var(--error);
+  border-color: var(--error);
+}
+
+.rejectBtn:hover {
+  background: var(--error);
+  color: white;
+}
+
+/* ========== ریسپانسیو ========== */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
