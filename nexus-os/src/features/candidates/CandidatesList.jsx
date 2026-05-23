@@ -9,21 +9,15 @@ function CandidatesList() {
   const { data } = useCandidates();
   const queryClient = useQueryClient();
 
-  async function handleHire(item) {
-    const { data: candidateData, error: candidateError } = await supabase
-      .from("developers")
-      .insert({
-        full_name: item.full_name,
-        email: item.email,
-        specialty: item.specialty,
-      });
+  async function handleReject(req) {
+    const { error: deleteError } = await supabase
+      .from("candidates ")
+      .delete()
+      .eq("id", req.id);
 
-    if (candidateError) return toast.error(candidateError.message);
+    if (deleteError) return toast.error(deleteError.message);
 
-    if (candidateData) {
-      await supabase.from("candidates ").delete().eq("id", item.id);
-    }
-
+    toast.success("Request rejected!");
     queryClient.invalidateQueries({ queryKey: ["candidates"] });
   }
 
@@ -51,7 +45,7 @@ function CandidatesList() {
                 <td>{item.resume_url}</td>
                 <td>{new Date(item.created_at).toLocaleDateString()}</td>
                 <td>
-                  <button onClick={() => handleHire(item)}>Hire</button>
+                  <button onClick={() => handleReject(item)}>Reject</button>
                 </td>
               </tr>
             ))}

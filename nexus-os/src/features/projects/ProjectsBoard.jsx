@@ -77,6 +77,11 @@ function ProjectsBoard() {
     queryClient.invalidateQueries({ queryKey: ["projects"] });
   }
 
+  const getDeveloperName = (developerId) => {
+    const dev = developersData?.find((d) => d.id === developerId);
+    return dev?.full_name || "Not Assigned";
+  };
+
   return (
     <div className={styles.board}>
       {/* هدر */}
@@ -143,7 +148,7 @@ function ProjectsBoard() {
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Developer</span>
                 <span className={styles.metaValue}>
-                  {item.full_name || "Not Assigned"}
+                  {getDeveloperName(item.developer_id)}{" "}
                 </span>
               </div>
 
