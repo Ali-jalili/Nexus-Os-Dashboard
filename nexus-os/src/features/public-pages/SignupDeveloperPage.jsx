@@ -4,6 +4,7 @@ import { useState } from "react";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
+import useAuth from "../../Hook/useAuth";
 
 function SignupDeveloperPage() {
   const [name, setName] = useState("");
@@ -11,6 +12,7 @@ function SignupDeveloperPage() {
   const [password, setPassword] = useState("");
   const [specialty, setSpecialty] = useState("");
   const [resumeUrl, setResumeUrl] = useState("");
+  const { handleLogout } = useAuth();
 
   let navigate = useNavigate();
 
@@ -28,7 +30,7 @@ function SignupDeveloperPage() {
     });
 
     if (error) return toast.error(error.message);
-
+    console.log("data.user:", data.user);
     if (data.user) {
       // ذخیره رزومه در جدول candidates
       const { error: insertError } = await supabase.from("candidates").insert({
@@ -41,7 +43,8 @@ function SignupDeveloperPage() {
       if (insertError) return toast.error(insertError.message);
 
       toast.success("Account created and resume submitted!");
-      navigate("/login");
+      await handleLogout();
+      navigate("/");
     }
   }
 
@@ -94,7 +97,7 @@ function SignupDeveloperPage() {
         <input
           value={resumeUrl}
           onChange={(e) => setResumeUrl(e.target.value)}
-          type="email"
+          type="text"
           id="devResumeUrl"
           placeholder="Enter your full ResumeUrl"
         />
