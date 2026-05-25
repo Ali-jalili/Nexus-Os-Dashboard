@@ -90,6 +90,8 @@ function ProjectsBoard() {
     return client?.full_name || "N/A";
   };
 
+  console.log("developersData:", developersData);
+
   return (
     <div className={styles.board}>
       {/* هدر */}

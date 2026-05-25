@@ -83,7 +83,7 @@ function Header({ showSidebarToggle = false, onToggleSidebar, isSidebarOpen }) {
 
   async function handleExit() {
     await handleLogout();
-    navigate("/login");
+    navigate("/");
   }
 
   return (
