@@ -40,7 +40,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <RoleGate />, // ← اضافه شد
+        element: <RoleGate allowedRoles={["admin"]} />, // ← اضافه شد
         children: [
           {
             element: <AppLayout />,
@@ -63,7 +63,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <RoleGate />, // ← اضافه شد
+        element: <RoleGate allowedRoles={["client"]} />, // ← اضافه شد
         children: [
           {
             element: <ClientLayout />,
@@ -80,7 +80,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <RoleGate />, // ← اضافه شد
+        element: <RoleGate allowedRoles={["developer"]} />,
         children: [{ index: true, element: <DeveloperView /> }],
       },
     ],

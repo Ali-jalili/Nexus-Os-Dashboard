@@ -102,7 +102,7 @@ function Login() {
 
         <p className={styles.footerText}>
           Don't have an account?{" "}
-          <Link to="/get-started" className={styles.link}>
+          <Link to="/" className={styles.link}>
             Get Started
           </Link>
         </p>

@@ -26,7 +26,12 @@
 .card { background: var(--bg-primary); border: 1px solid var(--border-primary); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; }
 .cardHeader { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem; }
 .card h3 { font-size: 1rem; font-weight: 600; color: var(--text-primary); margin: 0; }
-
+.budget {
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin: 0;
+}
 .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 100px; font-size: 0.7rem; font-weight: 600; white-space: nowrap; background: var(--accent-subtle); color: var(--accent-primary); }
 .in_progress { background: rgba(37, 99, 235, 0.1); color: var(--info); }
 .completed { background: rgba(16, 185, 129, 0.1); color: var(--success); }

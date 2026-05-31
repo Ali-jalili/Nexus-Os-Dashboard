@@ -60,3 +60,10 @@
 .submitBtn:hover {
   background-color: var(--accent-hover);
 }
+
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

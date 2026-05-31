@@ -1,5 +1,5 @@
 /** @format */
-import { FaEnvelope } from "react-icons/fa";
+import { FaEnvelope, FaSpinner } from "react-icons/fa";
 import useRequests from "../../Hook/useRequests";
 import StatCard from "../../ui/StatCard";
 import styles from "./RequestsInbox.module.css";
@@ -7,22 +7,30 @@ import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import Spinner from "../../ui/Spinner";
 
 function RequestsInbox() {
+  const [isApproving, setIsApproving] = useState(false);
+  const [isRejecting, setIsRejecting] = useState(false);
   const [expandedId, setExpandedId] = useState(null);
-  const { data: requests } = useRequests();
+  const { data: requests, error, isLoading } = useRequests();
   const queryClient = useQueryClient();
 
+  if (isLoading) return <Spinner />;
+  if (error) toast.error(error.message);
+
   async function handleApprove(req) {
+    setIsApproving(req.id);
     const { error: projectError } = await supabase.from("projects").insert({
       title: req.project_description,
       client_id: req.client_id,
       status: "pending",
       budget: req.budget,
     });
-
-    if (projectError) return toast.error(projectError.message);
-
+    if (projectError) {
+      setIsApproving(null);
+      return toast.error(projectError.message);
+    }
     const { error: updateError } = await supabase
       .from("clients")
       .update({
@@ -31,29 +39,40 @@ function RequestsInbox() {
       })
       .eq("id", req.client_id);
 
-    if (updateError) return toast.error(updateError.message);
+    if (updateError) {
+      setIsApproving(null);
+      return toast.error(updateError.message);
+    }
 
     const { error: deleteError } = await supabase
       .from("requests")
       .delete()
       .eq("id", req.id);
 
-    if (deleteError) return toast.error(deleteError.message);
-
+    if (deleteError) {
+      setIsApproving(null);
+      return toast.error(deleteError.message);
+    }
+    setIsApproving(null);
     toast.success("Request approved!");
     queryClient.invalidateQueries({ queryKey: ["requests"] });
     queryClient.invalidateQueries({ queryKey: ["clients"] });
   }
 
   async function handleReject(req) {
+    setIsRejecting(req.id);
     const { error: deleteError } = await supabase
       .from("requests")
       .delete()
       .eq("id", req.id);
 
-    if (deleteError) return toast.error(deleteError.message);
+    if (deleteError) {
+      setIsRejecting(null);
+      return toast.error(deleteError.message);
+    }
 
     toast.success("Request rejected!");
+    setIsRejecting(null);
     queryClient.invalidateQueries({ queryKey: ["requests"] });
   }
 
@@ -104,14 +123,24 @@ function RequestsInbox() {
               <button
                 className={styles.approveBtn}
                 onClick={() => handleApprove(req)}
+                disabled={isApproving === req.id || isRejecting === req.id}
               >
-                Approve
+                {isApproving === req.id ? (
+                  <FaSpinner className={styles.spinner} />
+                ) : (
+                  "Approve"
+                )}
               </button>
               <button
+                disabled={isApproving === req.id || isRejecting === req.id}
                 className={styles.rejectBtn}
                 onClick={() => handleReject(req)}
               >
-                Reject
+                {isRejecting === req.id ? (
+                  <FaSpinner className={styles.spinner} />
+                ) : (
+                  "Reject"
+                )}
               </button>
             </div>
           </div>

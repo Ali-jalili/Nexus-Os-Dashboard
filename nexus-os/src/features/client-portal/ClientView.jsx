@@ -108,6 +108,7 @@ function ClientView() {
                 <p className={styles.date}>
                   Submitted: {new Date(req.created_at).toLocaleDateString()}
                 </p>
+
                 <button
                   className={styles.detailBtn}
                   onClick={() => setSelectedRequest(req)}

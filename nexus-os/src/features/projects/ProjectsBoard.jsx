@@ -9,12 +9,13 @@ import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import useClients from "../../Hook/useClients";
+import Spinner from "../../ui/Spinner";
 
 function ProjectsBoard() {
   const queryClient = useQueryClient();
   const { data: clientsData } = useClients();
 
-  const { data: projectData } = useProjects();
+  const { data: projectData, error, isLoading } = useProjects();
   const { data: developersData } = useDevelopers();
   const [editingProject, setEditingProject] = useState(null);
 
@@ -90,7 +91,8 @@ function ProjectsBoard() {
     return client?.full_name || "N/A";
   };
 
-  console.log("developersData:", developersData);
+  if (isLoading) return <Spinner />;
+  if (error) toast.error(error.message);
 
   return (
     <div className={styles.board}>

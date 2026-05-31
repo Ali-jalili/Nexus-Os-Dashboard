@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import supabase from "../../services/supabase";
 import { useNavigate } from "react-router";
 import useAuth from "../../Hook/useAuth";
+import { FaSpinner } from "react-icons/fa";
 
 function ProjectRequestForm() {
   const [clientName, setClientName] = useState("");
@@ -14,6 +15,7 @@ function ProjectRequestForm() {
   const [description, setDescription] = useState(null);
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useAuth();
 
@@ -21,6 +23,14 @@ function ProjectRequestForm() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setIsLoading(true);
+    if (!clientName || !email || !description) {
+      toast.error(
+        "Please fill in required fields: Name, Email, and Description.",
+      );
+      setIsLoading(false);
+      return;
+    }
 
     const { error } = await supabase.from("requests").insert({
       client_name: clientName,
@@ -34,8 +44,10 @@ function ProjectRequestForm() {
     });
 
     if (error) {
+      setIsLoading(false);
       toast.error(error.message);
     } else {
+      setIsLoading(false);
       toast.success("Request submitted successfully!");
       navigate("/client-dashboard");
       setClientName("");
@@ -46,8 +58,6 @@ function ProjectRequestForm() {
       setDescription("");
     }
   }
-  console.log(user);
-  console.log("user.id:", user.id, "user.email:", user.email);
 
   return (
     <form className={styles.form}>
@@ -120,8 +130,17 @@ function ProjectRequestForm() {
         />
       </div>
 
-      <button type="submit" className={styles.submitBtn} onClick={handleSubmit}>
-        Submit Request
+      <button
+        disabled={isLoading}
+        type="submit"
+        className={styles.submitBtn}
+        onClick={handleSubmit}
+      >
+        {isLoading ? (
+          <FaSpinner className={styles.spinner} />
+        ) : (
+          "Submit Request"
+        )}
       </button>
     </form>
   );

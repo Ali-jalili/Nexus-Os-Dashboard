@@ -152,6 +152,14 @@
   color: white;
 }
 
+.spinner {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ========== ریسپانسیو ========== */
 @media (max-width: 768px) {
   .grid {
