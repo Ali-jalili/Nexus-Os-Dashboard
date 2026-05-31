@@ -1,0 +1,4 @@
+{
+  "buildCommand": "cd nexus-os && npm run build",
+  "installCommand": "cd nexus-os && npm install"
+}
