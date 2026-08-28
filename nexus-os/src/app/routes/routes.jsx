@@ -3,37 +3,42 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import Spinner from "../ui/Spinner";
+import AppLayout from "../AppLayout";
+import ClientLayout from "../ClientLayout";
+import PublicLayout from "../PublicLayout";
+import ProtectedRoute from "./ProtectedRoute";
+import RoleGate from "./RoleGate";
+import Spinner from "../../ui/Spinner";
 
-import AppLayout from "../app/AppLayout";
-import ClientLayout from "../app/ClientLayout";
-import PublicLayout from "../app/PublicLayout";
-import ProtectedRoute from "../app/routes/ProtectedRoute";
-import RoleGate from "../app/routes/RoleGate";
-
-const HomePage = lazy(() => import("../features/public-pages/HomePage"));
+const HomePage = lazy(() => import("../../features/public-pages/HomePage"));
 const ProjectRequestForm = lazy(
-  () => import("../features/public-pages/ProjectRequestForm"),
+  () => import("../../features/public-pages/ProjectRequestForm"),
 );
-const Login = lazy(() => import("../features/public-pages/Login"));
+const Login = lazy(() => import("../../features/public-pages/Login"));
 const SignupClientPage = lazy(
-  () => import("../features/public-pages/SignupClientPage"),
+  () => import("../../features/public-pages/SignupClientPage"),
 );
 const SignupDeveloperPage = lazy(
-  () => import("../features/public-pages/SignupDeveloperPage"),
+  () => import("../../features/public-pages/SignupDeveloperPage"),
 );
 const AdminDashboard = lazy(
-  () => import("../features/admin-dashboard/AdminDashboard"),
+  () => import("../../features/admin-dashboard/AdminDashboard"),
 );
-const ProjectsBoard = lazy(() => import("../features/projects/ProjectsBoard"));
-const RequestsInbox = lazy(() => import("../features/requests/RequestsInbox"));
-const ClientsList = lazy(() => import("../features/clients/ClientsList"));
+const ProjectsBoard = lazy(
+  () => import("../../features/projects/ProjectsBoard"),
+);
+const RequestsInbox = lazy(
+  () => import("../../features/requests/RequestsInbox"),
+);
+const ClientsList = lazy(() => import("../../features/clients/ClientsList"));
 const CandidatesList = lazy(
-  () => import("../features/candidates/CandidatesList"),
+  () => import("../../features/candidates/CandidatesList"),
 );
-const ClientView = lazy(() => import("../features/client-portal/ClientView"));
+const ClientView = lazy(
+  () => import("../../features/client-portal/ClientView"),
+);
 const DeveloperView = lazy(
-  () => import("../features/developer-portal/DeveloperView"),
+  () => import("../../features/developer-portal/DeveloperView"),
 );
 
 const routes = createBrowserRouter([
