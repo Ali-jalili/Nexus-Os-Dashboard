@@ -1,25 +1,40 @@
 /** @format */
 
+import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import HomePage from "./features/public-pages/HomePage";
-import ProjectRequestForm from "./features/public-pages/ProjectRequestForm";
-import Login from "./features/public-pages/Login";
-import AdminDashboard from "./features/admin-dashboard/AdminDashboard";
-import ProjectsBoard from "./features/projects/ProjectsBoard";
-import RequestsInbox from "./features/requests/RequestsInbox";
-import ClientsList from "./features/clients/ClientsList";
-import CandidatesList from "./features/candidates/CandidatesList";
-import ClientView from "./features/client-portal/ClientView";
-import RoleGate from "./app/RoleGate";
-import AppLayout from "./app/AppLayout";
-import ClientLayout from "./app/ClientLayout";
-import { Toaster } from "react-hot-toast";
-import PublicLayout from "./app/PublicLayout";
-import SignupClientPage from "./features/public-pages/SignupClientPage";
-import SignupDeveloperPage from "./features/public-pages/SignupDeveloperPage";
-import DeveloperView from "./features/developer-portal/DeveloperView";
-import ProtectedRoute from "./app/routes/ProtectedRoute";
+import Spinner from "../ui/Spinner";
+
+import AppLayout from "../app/AppLayout";
+import ClientLayout from "../app/ClientLayout";
+import PublicLayout from "../app/PublicLayout";
+import ProtectedRoute from "../app/routes/ProtectedRoute";
+import RoleGate from "../app/routes/RoleGate";
+
+const HomePage = lazy(() => import("../features/public-pages/HomePage"));
+const ProjectRequestForm = lazy(
+  () => import("../features/public-pages/ProjectRequestForm"),
+);
+const Login = lazy(() => import("../features/public-pages/Login"));
+const SignupClientPage = lazy(
+  () => import("../features/public-pages/SignupClientPage"),
+);
+const SignupDeveloperPage = lazy(
+  () => import("../features/public-pages/SignupDeveloperPage"),
+);
+const AdminDashboard = lazy(
+  () => import("../features/admin-dashboard/AdminDashboard"),
+);
+const ProjectsBoard = lazy(() => import("../features/projects/ProjectsBoard"));
+const RequestsInbox = lazy(() => import("../features/requests/RequestsInbox"));
+const ClientsList = lazy(() => import("../features/clients/ClientsList"));
+const CandidatesList = lazy(
+  () => import("../features/candidates/CandidatesList"),
+);
+const ClientView = lazy(() => import("../features/client-portal/ClientView"));
+const DeveloperView = lazy(
+  () => import("../features/developer-portal/DeveloperView"),
+);
 
 const routes = createBrowserRouter([
   {
@@ -38,7 +53,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <RoleGate allowedRoles={["admin"]} />, // ← اضافه شد
+        element: <RoleGate allowedRoles={["admin"]} />,
         children: [
           {
             element: <AppLayout />,
@@ -60,7 +75,7 @@ const routes = createBrowserRouter([
     element: <ProtectedRoute />,
     children: [
       {
-        element: <RoleGate allowedRoles={["client"]} />, // ← اضافه شد
+        element: <RoleGate allowedRoles={["client"]} />,
         children: [
           {
             element: <ClientLayout />,
@@ -83,13 +98,10 @@ const routes = createBrowserRouter([
   },
 ]);
 
-function App() {
+export default function Router() {
   return (
-    <>
-      <Toaster position="top-center" />
+    <Suspense fallback={<Spinner />}>
       <RouterProvider router={routes} />
-    </>
+    </Suspense>
   );
 }
-
-export default App;
