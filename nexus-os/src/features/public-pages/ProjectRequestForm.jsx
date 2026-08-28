@@ -1,43 +1,43 @@
 /** @format */
 
 import { useState } from "react";
-import styles from "./ProjectRequestForm.module.css";
-import toast from "react-hot-toast";
-import supabase from "../../services/supabase";
-import { useNavigate } from "react-router";
-import useAuth from "../../hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import { FaSpinner } from "react-icons/fa";
+import supabase from "../../services/supabase";
+import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
+import styles from "./ProjectRequestForm.module.css";
 
 function ProjectRequestForm() {
   const [clientName, setClientName] = useState("");
   const [companyName, setCompanyName] = useState("");
-  const [budget, setBudget] = useState(null);
-  const [description, setDescription] = useState(null);
+  const [budget, setBudget] = useState("");
+  const [description, setDescription] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const { user } = useAuth();
-
   const navigate = useNavigate();
 
   async function handleSubmit(e) {
     e.preventDefault();
-    setIsLoading(true);
+
     if (!clientName || !email || !description) {
       toast.error(
         "Please fill in required fields: Name, Email, and Description.",
       );
-      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     const { error } = await supabase.from("requests").insert({
       client_name: clientName,
       company_name: companyName,
-      budget: budget,
+      budget,
       contact_email: email,
-      phone: phone,
+      phone,
       client_id: user.id,
       project_description: description,
       status: "pending",
@@ -46,33 +46,34 @@ function ProjectRequestForm() {
     if (error) {
       setIsLoading(false);
       toast.error(error.message);
-    } else {
-      setIsLoading(false);
-      toast.success("Request submitted successfully!");
-      navigate("/client-dashboard");
-      setClientName("");
-      setCompanyName("");
-      setBudget("");
-      setEmail("");
-      setPhone("");
-      setDescription("");
+      return;
     }
+
+    setIsLoading(false);
+    toast.success("Request submitted successfully!");
+    navigate("/client-dashboard");
+
+    setClientName("");
+    setCompanyName("");
+    setBudget("");
+    setDescription("");
+    setEmail("");
+    setPhone("");
   }
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <h1>Submit New Project Request</h1>
 
       <div className={styles.field}>
         <label htmlFor="clientName">Full Name</label>
         <input
           value={clientName}
-          onChange={(e) => {
-            setClientName(e.target.value);
-          }}
+          onChange={(e) => setClientName(e.target.value)}
           type="text"
           id="clientName"
           placeholder="Enter your full name"
+          disabled={isLoading}
         />
       </div>
 
@@ -84,6 +85,7 @@ function ProjectRequestForm() {
           type="text"
           id="companyName"
           placeholder="Enter company name (optional)"
+          disabled={isLoading}
         />
       </div>
 
@@ -95,6 +97,7 @@ function ProjectRequestForm() {
           type="text"
           id="budget"
           placeholder="e.g. $5,000"
+          disabled={isLoading}
         />
       </div>
 
@@ -106,8 +109,10 @@ function ProjectRequestForm() {
           id="email"
           placeholder="email your project in detail..."
           type="email"
+          disabled={isLoading}
         />
       </div>
+
       <div className={styles.field}>
         <label htmlFor="phone">Project Phone</label>
         <input
@@ -116,6 +121,7 @@ function ProjectRequestForm() {
           id="phone"
           placeholder="phone your project in detail..."
           type="number"
+          disabled={isLoading}
         />
       </div>
 
@@ -127,15 +133,11 @@ function ProjectRequestForm() {
           id="description"
           rows={5}
           placeholder="Describe your project in detail..."
+          disabled={isLoading}
         />
       </div>
 
-      <button
-        disabled={isLoading}
-        type="submit"
-        className={styles.submitBtn}
-        onClick={handleSubmit}
-      >
+      <button disabled={isLoading} type="submit" className={styles.submitBtn}>
         {isLoading ? (
           <FaSpinner className={styles.spinner} />
         ) : (

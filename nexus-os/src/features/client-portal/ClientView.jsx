@@ -1,15 +1,16 @@
 /** @format */
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
+import { FaPlus, FaClock, FaCheckCircle, FaRocket } from "react-icons/fa";
+import supabase from "../../services/supabase";
+import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import useClientProjects from "../../hooks/useClientProjects";
 import useClientRequests from "../../hooks/useClientRequests";
 import Spinner from "../../ui/Spinner";
-import { FaPlus, FaClock, FaCheckCircle, FaRocket } from "react-icons/fa";
 import styles from "./ClientView.module.css";
-import supabase from "../../services/supabase";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
 
 function ClientView() {
   const queryClient = useQueryClient();
@@ -27,7 +28,7 @@ function ClientView() {
   const isEmpty = !hasRequests && !hasProjects;
 
   async function handleCancelRequest(requestId) {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("requests")
       .update({ status: "cancelled" })
       .eq("id", requestId);
@@ -36,8 +37,8 @@ function ClientView() {
       console.error("Cancel error:", error);
       return toast.error("Failed to cancel request: " + error.message);
     }
-    if (data) toast.success("Request cancelled successfully");
 
+    toast.success("Request cancelled successfully");
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
   }
 
@@ -48,6 +49,7 @@ function ClientView() {
       .eq("id", projectId);
 
     if (error) return toast.error("Failed to archive: " + error.message);
+
     toast.success("Project archived");
     queryClient.invalidateQueries({ queryKey: ["client-projects", user?.id] });
   }
@@ -64,9 +66,12 @@ function ClientView() {
             Manage your projects and track progress
           </p>
         </div>
-        <Link to="/request-project" className={styles.addBtn}>
-          <FaPlus /> New Project
-        </Link>
+
+        {!isEmpty && (
+          <Link to="/request-project" className={styles.addBtn}>
+            <FaPlus /> New Project
+          </Link>
+        )}
       </div>
 
       {isEmpty && (
