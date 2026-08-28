@@ -1,9 +1,7 @@
 /** @format */
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
-import supabase from "../../services/supabase";
-import toast from "react-hot-toast";
 import {
   FaUser,
   FaEnvelope,
@@ -12,6 +10,9 @@ import {
   FaLink,
   FaSpinner,
 } from "react-icons/fa";
+import supabase from "../../services/supabase";
+import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 import styles from "./SignupDeveloperPage.module.css";
 
 function SignupDeveloperPage() {
@@ -26,11 +27,23 @@ function SignupDeveloperPage() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (!name || !email || !password || !specialty || !resumeUrl) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     setIsLoading(true);
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: name, role: "developer" } },
+      options: {
+        data: {
+          full_name: name,
+          role: "developer",
+        },
+      },
     });
 
     if (error) {
@@ -42,8 +55,8 @@ function SignupDeveloperPage() {
     if (data.user) {
       const { error: insertError } = await supabase.from("candidates").insert({
         full_name: name,
-        email: email,
-        specialty: specialty,
+        email,
+        specialty,
         resume_url: resumeUrl,
       });
 
@@ -56,8 +69,8 @@ function SignupDeveloperPage() {
       toast.success("Application submitted! We'll contact you soon.");
       await handleLogout();
       navigate("/");
-      setIsLoading(false);
     }
+
     setIsLoading(false);
   }
 
