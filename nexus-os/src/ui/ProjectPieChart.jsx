@@ -1,7 +1,7 @@
 /** @format */
 
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import useProjectStats from "../Hook/useProjectStats";
+import useProjectStats from "../hooks/useProjectStats";
 import Spinner from "./Spinner";
 import styles from "./ProjectPieChart.module.css";
 

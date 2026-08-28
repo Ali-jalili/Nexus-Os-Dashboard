@@ -1,6 +1,6 @@
 /** @format */
-import useDeveloperProjects from "../../Hook/useDeveloperProjects";
-import useAuth from "../../Hook/useAuth";
+import useDeveloperProjects from "../../hooks/useDeveloperProjects";
+import useAuth from "../../hooks/useAuth";
 import Spinner from "../../ui/Spinner";
 import { FaCode } from "react-icons/fa";
 import styles from "./DeveloperView.module.css";

@@ -1,9 +1,9 @@
 /** @format */
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../Hook/useAuth";
-import useClientProjects from "../../Hook/useClientProjects";
-import useClientRequests from "../../Hook/useClientRequests";
+import useAuth from "../../hooks/useAuth";
+import useClientProjects from "../../hooks/useClientProjects";
+import useClientRequests from "../../hooks/useClientRequests";
 import Spinner from "../../ui/Spinner";
 import { FaPlus, FaClock, FaCheckCircle, FaRocket } from "react-icons/fa";
 import styles from "./ClientView.module.css";

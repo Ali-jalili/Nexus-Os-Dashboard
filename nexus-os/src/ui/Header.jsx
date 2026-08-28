@@ -5,7 +5,7 @@
 // import { FaCode } from "react-icons/fa";
 // import styles from "./Header.module.css";
 // import { NavLink, useNavigate } from "react-router-dom";
-// import useAuth from "../Hook/useAuth";
+// import useAuth from "../hooks/useAuth";
 
 // function Header({ showSidebarToggle = false }) {
 //   const { role, user, handleLogout } = useAuth();
@@ -75,7 +75,7 @@ import { Link } from "react-router-dom";
 import { FaCode, FaBars, FaChevronLeft } from "react-icons/fa";
 import styles from "./Header.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
-import useAuth from "../Hook/useAuth";
+import useAuth from "../hooks/useAuth";
 
 function Header({ showSidebarToggle = false, onToggleSidebar, isSidebarOpen }) {
   const { role, user, handleLogout } = useAuth();

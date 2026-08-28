@@ -2,7 +2,7 @@
 import { FaUser, FaBuilding, FaEnvelope, FaPhone } from "react-icons/fa";
 import styles from "./ClientsList.module.css";
 import Spinner from "../../ui/Spinner";
-import useClients from "../../Hook/useClients";
+import useClients from "../../hooks/useClients";
 import toast from "react-hot-toast";
 
 function ClientsList() {

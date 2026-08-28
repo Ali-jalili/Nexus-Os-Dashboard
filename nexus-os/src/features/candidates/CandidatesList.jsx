@@ -6,7 +6,7 @@ import {
   FaLink,
   FaCalendarAlt,
 } from "react-icons/fa";
-import useCandidates from "../../Hook/useCandidates";
+import useCandidates from "../../hooks/useCandidates";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";

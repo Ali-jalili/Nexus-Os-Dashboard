@@ -1,6 +1,6 @@
 /** @format */
 import { FaEnvelope, FaSpinner } from "react-icons/fa";
-import useRequests from "../../Hook/useRequests";
+import useRequests from "../../hooks/useRequests";
 import StatCard from "../../ui/StatCard";
 import styles from "./RequestsInbox.module.css";
 import supabase from "../../services/supabase";

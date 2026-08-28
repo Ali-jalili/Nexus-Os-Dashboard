@@ -3,12 +3,12 @@ import { useMemo } from "react";
 
 import { useState } from "react";
 import styles from "./ProjectsBoard.module.css";
-import useProjects from "../../Hook/useProjects";
-import useDevelopers from "../../Hook/useDevelopers";
+import useProjects from "../../hooks/useProjects";
+import useDevelopers from "../../hooks/useDevelopers";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import useClients from "../../Hook/useClients";
+import useClients from "../../hooks/useClients";
 import Spinner from "../../ui/Spinner";
 
 function ProjectsBoard() {

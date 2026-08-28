@@ -5,7 +5,7 @@ import styles from "./ProjectRequestForm.module.css";
 import toast from "react-hot-toast";
 import supabase from "../../services/supabase";
 import { useNavigate } from "react-router";
-import useAuth from "../../Hook/useAuth";
+import useAuth from "../../hooks/useAuth";
 import { FaSpinner } from "react-icons/fa";
 
 function ProjectRequestForm() {

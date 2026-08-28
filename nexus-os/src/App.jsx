@@ -22,7 +22,6 @@ import SignupDeveloperPage from "./features/public-pages/SignupDeveloperPage";
 import DeveloperView from "./features/developer-portal/DeveloperView";
 
 const routes = createBrowserRouter([
-  // ۱. صفحات عمومی (بدون محافظت)
   {
     element: <PublicLayout />,
     children: [
@@ -34,7 +33,6 @@ const routes = createBrowserRouter([
     ],
   },
 
-  // ۲. پنل ادمین (محافظت دوگانه)
   {
     path: "/app",
     element: <ProtectedRoute />,
@@ -57,7 +55,6 @@ const routes = createBrowserRouter([
     ],
   },
 
-  // ۳. پورتال مشتری (محافظت دوگانه)
   {
     path: "/client-dashboard",
     element: <ProtectedRoute />,
@@ -74,7 +71,6 @@ const routes = createBrowserRouter([
     ],
   },
 
-  // ۴. پورتال توسعه‌دهنده (محافظت دوگانه)
   {
     path: "/dev-dashboard",
     element: <ProtectedRoute />,

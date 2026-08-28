@@ -1,8 +1,8 @@
 /** @format */
 
-import useProjects from "../../Hook/useProjects";
-import useRequests from "../../Hook/useRequests";
-import useClients from "../../Hook/useClients";
+import useProjects from "../../hooks/useProjects";
+import useRequests from "../../hooks/useRequests";
+import useClients from "../../hooks/useClients";
 import StatCard from "../../ui/StatCard";
 import Spinner from "../../ui/Spinner";
 import {
@@ -15,8 +15,8 @@ import {
   FaCoins,
 } from "react-icons/fa";
 import styles from "./AdminDashboard.module.css";
-import useDevelopers from "../../Hook/useDevelopers";
-import useTotalRevenue from "../../Hook/useTotalRevenue";
+import useDevelopers from "../../hooks/useDevelopers";
+import useTotalRevenue from "../../hooks/useTotalRevenue";
 import ProjectPieChart from "../../ui/ProjectPieChart";
 
 function AdminDashboard() {

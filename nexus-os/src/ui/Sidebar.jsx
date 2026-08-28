@@ -14,7 +14,7 @@
 //   FaBars,
 //   FaTimes,
 // } from "react-icons/fa";
-// import useAuth from "../Hook/useAuth";
+// import useAuth from "../hooks/useAuth";
 // import styles from "./Sidebar.module.css";
 
 // function Sidebar() {
