@@ -32,6 +32,11 @@ function RequestsInbox() {
   async function handleApprove(req) {
     setIsApproving(req.id);
 
+    console.log("Inserting:", {
+      title: req.project_title,
+      description: req.project_description,
+    });
+
     const { error: projectError } = await supabase.from("projects").insert({
       title: req.project_title,
       description: req.project_description,
@@ -72,6 +77,11 @@ function RequestsInbox() {
     toast.success("Request approved!");
     queryClient.invalidateQueries({ queryKey: ["requests"] });
     queryClient.invalidateQueries({ queryKey: ["clients"] });
+
+    console.log({
+      project_title: req.project_title,
+      project_description: req.project_description,
+    });
   }
 
   async function handleReject(req) {

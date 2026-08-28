@@ -1,10 +1,9 @@
 /** @format */
 
-import { Link } from "react-router-dom";
 import useDeveloperProjects from "../../hooks/useDeveloperProjects";
 import useAuth from "../../hooks/useAuth";
 import Spinner from "../../ui/Spinner";
-import { FaCode, FaCalendarAlt, FaTasks, FaCheckCircle } from "react-icons/fa";
+import { FaTasks, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
 import styles from "./DeveloperView.module.css";
 
 function DeveloperView() {
@@ -53,13 +52,16 @@ function DeveloperView() {
               </span>
             </div>
 
-            <p className={styles.description}>
-              {project.description || "No description provided."}
-            </p>
+            <div className={styles.section}>
+              <span className={styles.label}>Description</span>
+              <p className={styles.description}>
+                {project.description || "No description provided."}
+              </p>
+            </div>
 
             <div className={styles.progressSection}>
               <div className={styles.progressLabel}>
-                <span>Progress</span>
+                <span className={styles.label}>Progress</span>
                 <span>{project.progress ?? 0}%</span>
               </div>
               <div className={styles.progressBar}>

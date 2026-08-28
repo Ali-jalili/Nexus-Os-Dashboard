@@ -3,7 +3,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import { FaPlus, FaClock, FaCheckCircle, FaRocket } from "react-icons/fa";
+import {
+  FaPlus,
+  FaClock,
+  FaCheckCircle,
+  FaRocket,
+  FaTimes,
+} from "react-icons/fa";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
@@ -56,6 +62,7 @@ function ClientView() {
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.greeting}>
@@ -74,6 +81,7 @@ function ClientView() {
         )}
       </div>
 
+      {/* Empty State */}
       {isEmpty && (
         <div className={styles.emptyState}>
           <FaRocket className={styles.emptyIcon} />
@@ -85,12 +93,14 @@ function ClientView() {
         </div>
       )}
 
+      {/* Pending Requests */}
       {hasRequests && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <FaClock className={styles.sectionIcon} />
             <h2>Pending Requests</h2>
           </div>
+
           <div className={styles.reviewBanner}>
             <FaClock className={styles.reviewIcon} />
             <p>
@@ -98,55 +108,63 @@ function ClientView() {
               24-48 hours.
             </p>
           </div>
+
           <div className={styles.cardGrid}>
             {clientRequests?.map((req) => (
               <div key={req.id} className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <h3>
-                    {req.project_description?.slice(0, 50) ||
-                      "Untitled Request"}
+                  <h3 className={styles.cardTitle}>
+                    {req.project_title || "Untitled Request"}
                   </h3>
                   <span className={`${styles.badge} ${styles.pending}`}>
                     Under Review
                   </span>
                 </div>
+
                 <p className={styles.date}>
                   Submitted: {new Date(req.created_at).toLocaleDateString()}
                 </p>
 
-                <button
-                  className={styles.detailBtn}
-                  onClick={() => setSelectedRequest(req)}
-                >
-                  View Details
-                </button>
-                <button
-                  onClick={() => handleCancelRequest(req.id)}
-                  className={styles.cancelBtn}
-                >
-                  Cancel Request
-                </button>
+                <div className={styles.cardActions}>
+                  <button
+                    className={styles.detailBtn}
+                    onClick={() => setSelectedRequest(req)}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    className={styles.cancelBtn}
+                    onClick={() => handleCancelRequest(req.id)}
+                  >
+                    Cancel Request
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </section>
       )}
 
+      {/* Active Projects */}
       {hasProjects && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <FaCheckCircle className={styles.sectionIcon} />
             <h2>Active Projects</h2>
           </div>
+
           <div className={styles.cardGrid}>
             {clientProjects?.map((project) => (
               <div key={project.id} className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <h3>{project.title}</h3>
-                  <span className={`${styles.badge} ${styles[project.status]}`}>
+                  <h3 className={styles.cardTitle}>{project.title}</h3>
+                  <span
+                    className={`${styles.badge} ${styles[project.status] || styles.pending}`}
+                  >
                     {project.status}
                   </span>
                 </div>
+
                 <div className={styles.progressWrapper}>
                   <div className={styles.progressBar}>
                     <div
@@ -158,9 +176,11 @@ function ClientView() {
                     {project.progress ?? 0}%
                   </span>
                 </div>
+
                 <p className={styles.date}>
                   Started: {new Date(project.created_at).toLocaleDateString()}
                 </p>
+
                 {project.status === "completed" && (
                   <button
                     className={styles.archiveBtn}
@@ -175,31 +195,49 @@ function ClientView() {
         </section>
       )}
 
+      {/* Modal */}
       {selectedRequest && (
         <div
           className={styles.modalOverlay}
           onClick={() => setSelectedRequest(null)}
         >
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>Request Details</h3>
-            <p>
-              <strong>Description:</strong>
-            </p>
-            <p>{selectedRequest.project_description}</p>
-            <p>
-              <strong>Budget:</strong>{" "}
-              {selectedRequest.budget || "Not specified"}
-            </p>
-            <p>
-              <strong>Submitted:</strong>{" "}
-              {new Date(selectedRequest.created_at).toLocaleDateString()}
-            </p>
-            <button
-              className={styles.closeBtn}
-              onClick={() => setSelectedRequest(null)}
-            >
-              Close
-            </button>
+            <div className={styles.modalHeader}>
+              <h3>Request Details</h3>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setSelectedRequest(null)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalTitle}>
+                <span className={styles.modalLabel}>Project</span>
+                <h4>{selectedRequest.project_title}</h4>
+              </div>
+
+              <div className={styles.modalSection}>
+                <span className={styles.modalLabel}>Description</span>
+                <p className={styles.modalText}>
+                  {selectedRequest.project_description}
+                </p>
+              </div>
+
+              <div className={styles.modalRow}>
+                <div className={styles.modalItem}>
+                  <span className={styles.modalLabel}>Budget</span>
+                  <p>{selectedRequest.budget || "Not specified"}</p>
+                </div>
+                <div className={styles.modalItem}>
+                  <span className={styles.modalLabel}>Submitted</span>
+                  <p>
+                    {new Date(selectedRequest.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
