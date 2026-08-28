@@ -1,11 +1,11 @@
 /** @format */
 
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router";
-import styles from "./SignupClientPage.module.css";
 import { FaSpinner } from "react-icons/fa";
+import styles from "./SignupClientPage.module.css";
 
 function SignupClientPage() {
   const [name, setName] = useState("");
@@ -28,8 +28,8 @@ function SignupClientPage() {
     }
 
     const { data, error } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
       options: {
         data: {
           full_name: name,
@@ -43,6 +43,7 @@ function SignupClientPage() {
       toast.error(error.message);
       return;
     }
+
     if (data.user && data.session) {
       await supabase.auth.setSession({
         access_token: data.session.access_token,
@@ -66,6 +67,7 @@ function SignupClientPage() {
           type="text"
           id="clientName"
           placeholder="John Doe"
+          disabled={isLoading}
         />
       </div>
 
@@ -77,6 +79,7 @@ function SignupClientPage() {
           type="email"
           id="clientEmail"
           placeholder="john@example.com"
+          disabled={isLoading}
         />
       </div>
 
@@ -88,6 +91,7 @@ function SignupClientPage() {
           type="password"
           id="clientPassword"
           placeholder="Min. 6 characters"
+          disabled={isLoading}
         />
       </div>
 
@@ -95,12 +99,15 @@ function SignupClientPage() {
         {isLoading ? (
           <FaSpinner className={styles.spinner} />
         ) : (
-          "Submit Application"
+          "Create Account"
         )}
       </button>
 
       <p className={styles.footerText}>
-        Already have an account? <a href="/login">Log in</a>
+        Already have an account?{" "}
+        <Link to="/login" className={styles.link}>
+          Log in
+        </Link>
       </p>
     </form>
   );
