@@ -68,6 +68,7 @@ function ClientView() {
 
     toast.success("Request cancelled successfully");
     setIsCancelling(null);
+    setSelectedRequest(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
   }
 
@@ -83,6 +84,7 @@ function ClientView() {
 
     toast.success("Request deleted.");
     setIsDeleting(null);
+    setSelectedRequest(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
   }
 
