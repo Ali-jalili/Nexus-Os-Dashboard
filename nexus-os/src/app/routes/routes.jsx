@@ -10,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import RoleGate from "./RoleGate";
 import Spinner from "../../ui/Spinner";
 import DevLayout from "../layout/DevLayout";
+import NotFoundPage from "../../features/public-pages/NotFoundPage";
 
 const HomePage = lazy(() => import("../../features/public-pages/HomePage"));
 const ProjectRequestForm = lazy(
@@ -51,6 +52,10 @@ const routes = createBrowserRouter([
       { path: "/login", element: <Login /> },
       { path: "signup/client", element: <SignupClientPage /> },
       { path: "signup/developer", element: <SignupDeveloperPage /> },
+      {
+        path: "*",
+        element: <NotFoundPage />,
+      },
     ],
   },
 
