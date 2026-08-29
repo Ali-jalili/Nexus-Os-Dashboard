@@ -8,19 +8,13 @@ function useClientRequests(user) {
     const { data, error } = await supabase
       .from("requests")
       .select("*")
-      .eq("status", "pending")
       .eq("client_id", user.id)
       .order("created_at", { ascending: false });
 
-    if (error) {
-      throw error;
-    }
-
-    console.log("data:", data, "error:", error);
+    if (error) throw error;
 
     return data;
   }
-
   const { data, isLoading, error } = useQuery({
     queryFn: fetchClientRequests,
     queryKey: ["client-requests", user?.id],

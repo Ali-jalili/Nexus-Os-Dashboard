@@ -9,12 +9,20 @@ import {
   FaCheckCircle,
   FaRocket,
   FaTimes,
+  FaExclamationTriangle,
+  FaEdit,
+  FaTrash,
+  FaSpinner,
 } from "react-icons/fa";
-import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
+
 import useAuth from "../../hooks/useAuth";
 import useClientProjects from "../../hooks/useClientProjects";
 import useClientRequests from "../../hooks/useClientRequests";
+
+import { cancelRequest, deleteRequest } from "../../services/requestService";
+import { archiveProject } from "../../services/projectService";
+
 import Spinner from "../../ui/Spinner";
 import styles from "./ClientView.module.css";
 
@@ -25,36 +33,59 @@ function ClientView() {
   const { data: clientRequests, isLoading: isRequestsLoading } =
     useClientRequests(user);
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(null);
+  const [isCancelling, setIsCancelling] = useState(null);
 
   if (isLoading || isRequestsLoading) return <Spinner />;
   if (error) return <p className={styles.error}>Error: {error.message}</p>;
 
-  const hasRequests = clientRequests?.length > 0;
+  const pendingRequests = clientRequests?.filter(
+    (req) => req.status === "pending",
+  );
+
+  const rejectedRequests = clientRequests?.filter(
+    (req) => req.status === "rejected",
+  );
+
+  const hasPending = pendingRequests?.length > 0;
+  const hasRejected = rejectedRequests?.length > 0;
   const hasProjects = clientProjects?.length > 0;
-  const isEmpty = !hasRequests && !hasProjects;
+  const isEmpty = !hasPending && !hasRejected && !hasProjects;
 
   async function handleCancelRequest(requestId) {
-    const { error } = await supabase
-      .from("requests")
-      .update({ status: "cancelled" })
-      .eq("id", requestId);
+    setIsCancelling(requestId);
+
+    const { error } = await cancelRequest(requestId);
 
     if (error) {
-      console.error("Cancel error:", error);
-      return toast.error("Failed to cancel request: " + error.message);
+      setIsCancelling(null);
+      return toast.error(error.message);
     }
 
     toast.success("Request cancelled successfully");
+    setIsCancelling(null);
+    queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
+  }
+
+  async function handleDeleteRequest(requestId) {
+    setIsDeleting(requestId);
+
+    const { error } = await deleteRequest(requestId);
+
+    if (error) {
+      setIsDeleting(null);
+      return toast.error(error.message);
+    }
+
+    toast.success("Request deleted.");
+    setIsDeleting(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
   }
 
   async function handleArchiveProject(projectId) {
-    const { error } = await supabase
-      .from("projects")
-      .update({ status: "archived" })
-      .eq("id", projectId);
+    const { error } = await archiveProject(projectId);
 
-    if (error) return toast.error("Failed to archive: " + error.message);
+    if (error) return toast.error(error.message);
 
     toast.success("Project archived");
     queryClient.invalidateQueries({ queryKey: ["client-projects", user?.id] });
@@ -94,7 +125,7 @@ function ClientView() {
       )}
 
       {/* Pending Requests */}
-      {hasRequests && (
+      {hasPending && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <FaClock className={styles.sectionIcon} />
@@ -110,7 +141,7 @@ function ClientView() {
           </div>
 
           <div className={styles.cardGrid}>
-            {clientRequests?.map((req) => (
+            {pendingRequests?.map((req) => (
               <div key={req.id} className={styles.card}>
                 <div className={styles.cardHeader}>
                   <h3 className={styles.cardTitle}>
@@ -135,8 +166,69 @@ function ClientView() {
                   <button
                     className={styles.cancelBtn}
                     onClick={() => handleCancelRequest(req.id)}
+                    disabled={isCancelling === req.id}
                   >
-                    Cancel Request
+                    {isCancelling === req.id ? (
+                      <FaSpinner className={styles.spinner} />
+                    ) : (
+                      "Cancel Request"
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Rejected Requests */}
+      {hasRejected && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <FaExclamationTriangle className={styles.rejectedIcon} />
+            <h2>Rejected Requests</h2>
+          </div>
+
+          <div className={styles.cardGrid}>
+            {rejectedRequests?.map((req) => (
+              <div key={req.id} className={styles.rejectedCard}>
+                <div className={styles.cardHeader}>
+                  <h3 className={styles.cardTitle}>
+                    {req.project_title || "Untitled Request"}
+                  </h3>
+                  <span className={`${styles.badge} ${styles.rejected}`}>
+                    Rejected
+                  </span>
+                </div>
+
+                {req.reject_reason && (
+                  <div className={styles.rejectReason}>
+                    <strong>Reason:</strong>
+                    <p>{req.reject_reason}</p>
+                  </div>
+                )}
+
+                <p className={styles.date}>
+                  Submitted: {new Date(req.created_at).toLocaleDateString()}
+                </p>
+
+                <div className={styles.rejectedActions}>
+                  <Link
+                    to={`/request-project?edit=${req.id}`}
+                    className={styles.editBtn}
+                  >
+                    <FaEdit /> Edit & Resubmit
+                  </Link>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDeleteRequest(req.id)}
+                    disabled={isDeleting === req.id}
+                  >
+                    {isDeleting === req.id ? (
+                      <FaSpinner className={styles.spinner} />
+                    ) : (
+                      <FaTrash />
+                    )}
                   </button>
                 </div>
               </div>

@@ -12,12 +12,13 @@ import {
 import toast from "react-hot-toast";
 
 import useRequests from "../../hooks/useRequests";
+import { approveRequest, rejectRequest } from "../../services/requestService";
 
 import StatCard from "../../ui/StatCard";
 import Spinner from "../../ui/Spinner";
 
 import styles from "./RequestsInbox.module.css";
-import { approveRequest, rejectRequest } from "../../services/requestService";
+import RejectModal from "./RejectModal";
 
 function RequestsInbox() {
   const queryClient = useQueryClient();
@@ -25,6 +26,7 @@ function RequestsInbox() {
   const [isApproving, setIsApproving] = useState(null);
   const [isRejecting, setIsRejecting] = useState(null);
   const [expandedId, setExpandedId] = useState(null);
+  const [rejectingReq, setRejectingReq] = useState(null);
 
   if (isLoading) return <Spinner />;
   if (error) {
@@ -48,10 +50,10 @@ function RequestsInbox() {
     queryClient.invalidateQueries({ queryKey: ["clients"] });
   }
 
-  async function handleReject(req) {
-    setIsRejecting(req.id);
+  async function handleRejectConfirm(request, reason) {
+    setIsRejecting(request.id);
 
-    const { error } = await rejectRequest(req.id);
+    const { error } = await rejectRequest(request.id, reason);
 
     if (error) {
       setIsRejecting(null);
@@ -60,6 +62,7 @@ function RequestsInbox() {
 
     toast.success("Request rejected!");
     setIsRejecting(null);
+    setRejectingReq(null);
     queryClient.invalidateQueries({ queryKey: ["requests"] });
   }
 
@@ -145,21 +148,25 @@ function RequestsInbox() {
                 </button>
                 <button
                   className={styles.rejectBtn}
-                  onClick={() => handleReject(req)}
+                  onClick={() => setRejectingReq(req)}
                   disabled={isBusy}
                 >
-                  {isRejecting === req.id ? (
-                    <FaSpinner className={styles.spinner} />
-                  ) : (
-                    <FaTimesCircle />
-                  )}
-                  Reject
+                  <FaTimesCircle /> Reject
                 </button>
               </div>
             </div>
           );
         })}
       </div>
+
+      {rejectingReq && (
+        <RejectModal
+          request={rejectingReq}
+          onClose={() => setRejectingReq(null)}
+          onConfirm={handleRejectConfirm}
+          isRejecting={isRejecting}
+        />
+      )}
     </div>
   );
 }

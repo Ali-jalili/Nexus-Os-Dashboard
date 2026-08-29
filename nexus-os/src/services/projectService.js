@@ -19,3 +19,12 @@ export async function updateProjectStatus(projectId, { status, progress }) {
 
   return { data, error };
 }
+
+export async function archiveProject(projectId) {
+  const { data, error } = await supabase
+    .from("projects")
+    .update({ status: "archived" })
+    .eq("id", projectId);
+
+  return { data, error };
+}

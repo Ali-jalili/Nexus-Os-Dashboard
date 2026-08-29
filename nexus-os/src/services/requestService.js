@@ -24,6 +24,24 @@ export async function createRequest({
   return { data, error };
 }
 
+export async function updateRequest(requestId, updates) {
+  const { data, error } = await supabase
+    .from("requests")
+    .update(updates)
+    .eq("id", requestId);
+
+  return { data, error };
+}
+
+export async function deleteRequest(requestId) {
+  const { data, error } = await supabase
+    .from("requests")
+    .delete()
+    .eq("id", requestId);
+
+  return { data, error };
+}
+
 export async function approveRequest(req) {
   const { error: projectError } = await supabase.from("projects").insert({
     title: req.project_title,
@@ -47,14 +65,29 @@ export async function approveRequest(req) {
 
   const { error: deleteError } = await supabase
     .from("requests")
-    .delete()
+    .update({ status: "approved" })
     .eq("id", req.id);
 
   return { error: deleteError };
 }
 
-export async function rejectRequest(reqId) {
-  const { error } = await supabase.from("requests").delete().eq("id", reqId);
+export async function rejectRequest(reqId, reason) {
+  const { error } = await supabase
+    .from("requests")
+    .update({
+      status: "rejected",
+      reject_reason: reason,
+    })
+    .eq("id", reqId);
 
   return { error };
+}
+
+export async function cancelRequest(requestId) {
+  const { data, error } = await supabase
+    .from("requests")
+    .update({ status: "cancelled" })
+    .eq("id", requestId);
+
+  return { data, error };
 }
