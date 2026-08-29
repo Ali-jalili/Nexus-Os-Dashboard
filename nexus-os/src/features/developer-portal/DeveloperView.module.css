@@ -226,6 +226,54 @@
   padding: 2rem;
 }
 
+.roleBadge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  background: var(--accent-subtle);
+  color: var(--accent-primary);
+  border-radius: 100px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.detailBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4rem 0.8rem;
+  background: transparent;
+  border: 1px solid var(--accent-primary);
+  color: var(--accent-primary);
+  border-radius: var(--radius-md);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.detailBtn:hover {
+  background: var(--accent-primary);
+  color: white;
+}
+
+.managedBy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.statusIcon {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
 /* ========== Responsive ========== */
 @media (max-width: 600px) {
   .grid {

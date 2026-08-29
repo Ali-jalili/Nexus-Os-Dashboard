@@ -1,21 +1,41 @@
 /** @format */
 
+import { useState } from "react";
+
 import useDeveloperProjects from "../../hooks/useDeveloperProjects";
+import useDevelopers from "../../hooks/useDevelopers";
 import useAuth from "../../hooks/useAuth";
 import Spinner from "../../ui/Spinner";
-import { FaTasks, FaCalendarAlt, FaCheckCircle } from "react-icons/fa";
+import ProjectDetailsModal from "../../ui/ProjectDetailsModal";
+import {
+  FaTasks,
+  FaCalendarAlt,
+  FaCheckCircle,
+  FaCode,
+  FaEye,
+} from "react-icons/fa";
 import styles from "./DeveloperView.module.css";
 
 function DeveloperView() {
   const { user } = useAuth();
+  const { data: developers } = useDevelopers();
   const {
     data: developerProjects,
     isLoading,
     error,
   } = useDeveloperProjects(user);
+  const [selectedProject, setSelectedProject] = useState(null);
 
   if (isLoading) return <Spinner />;
   if (error) return <p className={styles.error}>Error: {error.message}</p>;
+
+  const developer = developers?.find((d) => d.id === user?.id);
+
+  const displayName =
+    developer?.full_name ||
+    user?.user_metadata?.full_name ||
+    user?.email ||
+    "Developer";
 
   return (
     <div className={styles.container}>
@@ -23,10 +43,14 @@ function DeveloperView() {
       <div className={styles.header}>
         <div>
           <h1 className={styles.greeting}>
-            Welcome,{" "}
-            <span className={styles.name}>{user.user_metadata?.full_name}</span>
+            Welcome, <span className={styles.name}>{displayName}</span>
           </h1>
           <p className={styles.subtitle}>Your assigned projects</p>
+        </div>
+
+        <div className={styles.roleBadge}>
+          <FaCode />
+          <span>Developer</span>
         </div>
       </div>
 
@@ -77,14 +101,30 @@ function DeveloperView() {
                 <FaCalendarAlt className={styles.metaIcon} />
                 <span>{new Date(project.created_at).toLocaleDateString()}</span>
               </div>
-              <div className={styles.statusHint}>
-                <FaCheckCircle className={styles.statusIcon} />
-                <span>Managed by Admin</span>
-              </div>
+
+              <button
+                className={styles.detailBtn}
+                onClick={() => setSelectedProject(project)}
+              >
+                <FaEye /> View Details
+              </button>
+            </div>
+
+            <div className={styles.managedBy}>
+              <FaCheckCircle className={styles.statusIcon} />
+              <span>Managed by Admin</span>
             </div>
           </div>
         ))}
       </div>
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
+      )}
     </div>
   );
 }
