@@ -238,8 +238,12 @@
   background: transparent;
   border: 1px solid var(--border-primary);
   color: var(--accent-primary);
+  margin-left: 50px;
 }
-
+.projectActions {
+  display: flex;
+  gap: 0.5rem;
+}
 .detailBtn:hover {
   background: var(--accent-subtle);
   border-color: var(--accent-primary);

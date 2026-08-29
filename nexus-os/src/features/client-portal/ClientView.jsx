@@ -24,6 +24,8 @@ import { cancelRequest, deleteRequest } from "../../services/requestService";
 import { archiveProject } from "../../services/projectService";
 
 import Spinner from "../../ui/Spinner";
+import ProjectDetailsModal from "../../components/ProjectDetailsModal";
+
 import styles from "./ClientView.module.css";
 
 function ClientView() {
@@ -32,7 +34,9 @@ function ClientView() {
   const { data: clientProjects, error, isLoading } = useClientProjects(user);
   const { data: clientRequests, isLoading: isRequestsLoading } =
     useClientRequests(user);
+
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
   const [isDeleting, setIsDeleting] = useState(null);
   const [isCancelling, setIsCancelling] = useState(null);
 
@@ -71,7 +75,7 @@ function ClientView() {
     setIsDeleting(requestId);
 
     const { error } = await deleteRequest(requestId);
-    console.log("Delete error:", error);
+
     if (error) {
       setIsDeleting(null);
       return toast.error(error.message);
@@ -80,7 +84,6 @@ function ClientView() {
     toast.success("Request deleted.");
     setIsDeleting(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
-    console.log("Invalidating:", ["client-requests", user?.id]);
   }
 
   async function handleArchiveProject(projectId) {
@@ -282,14 +285,22 @@ function ClientView() {
                     Started: {new Date(project.created_at).toLocaleDateString()}
                   </p>
 
-                  {project.status === "completed" && (
+                  <div className={styles.projectActions}>
+                    {project.status === "completed" && (
+                      <button
+                        className={styles.archiveBtn}
+                        onClick={() => handleArchiveProject(project.id)}
+                      >
+                        Archive
+                      </button>
+                    )}
                     <button
-                      className={styles.archiveBtn}
-                      onClick={() => handleArchiveProject(project.id)}
+                      className={styles.detailBtn}
+                      onClick={() => setSelectedProject(project)}
                     >
-                      Archive
+                      View Details
                     </button>
-                  )}
+                  </div>
                 </div>
               </div>
             ))}
@@ -297,7 +308,7 @@ function ClientView() {
         </section>
       )}
 
-      {/* Modal */}
+      {/* Request Details Modal */}
       {selectedRequest && (
         <div
           className={styles.modalOverlay}
@@ -342,6 +353,14 @@ function ClientView() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
       )}
     </div>
   );
