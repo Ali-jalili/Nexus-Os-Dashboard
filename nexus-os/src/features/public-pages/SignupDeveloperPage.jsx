@@ -12,9 +12,10 @@ import {
 } from "react-icons/fa";
 
 import toast from "react-hot-toast";
-import useAuth from "../../hooks/useAuth";
+
 import styles from "./SignupDeveloperPage.module.css";
 import { signupDeveloper } from "../../services/authService";
+import useAuth from "../../hooks/useAuth";
 
 function SignupDeveloperPage() {
   const [name, setName] = useState("");
@@ -49,9 +50,9 @@ function SignupDeveloperPage() {
       setIsLoading(false);
       return;
     }
-
-    toast.success("Application submitted! We'll contact you soon.");
     await handleLogout();
+    toast.success("Application submitted! We'll contact you soon.");
+
     navigate("/");
     setIsLoading(false);
   }

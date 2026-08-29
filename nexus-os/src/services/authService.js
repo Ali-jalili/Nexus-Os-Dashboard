@@ -48,7 +48,7 @@ async function signupDeveloper({
     options: {
       data: {
         full_name: name,
-        role: "developer",
+        role: "applicant",
       },
     },
   });
