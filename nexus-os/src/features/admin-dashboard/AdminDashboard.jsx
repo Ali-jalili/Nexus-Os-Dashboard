@@ -3,8 +3,13 @@
 import useProjects from "../../hooks/useProjects";
 import useRequests from "../../hooks/useRequests";
 import useClients from "../../hooks/useClients";
+import useDevelopers from "../../hooks/useDevelopers";
+import useTotalRevenue from "../../hooks/useTotalRevenue";
+
 import StatCard from "../../ui/StatCard";
 import Spinner from "../../ui/Spinner";
+import ProjectPieChart from "../../ui/ProjectPieChart";
+
 import {
   FaProjectDiagram,
   FaEnvelope,
@@ -14,10 +19,9 @@ import {
   FaCode,
   FaCoins,
 } from "react-icons/fa";
+
 import styles from "./AdminDashboard.module.css";
-import useDevelopers from "../../hooks/useDevelopers";
-import useTotalRevenue from "../../hooks/useTotalRevenue";
-import ProjectPieChart from "../../ui/ProjectPieChart";
+import { getClientName, getDeveloperName } from "../../../utils/names";
 
 function AdminDashboard() {
   const { data: projects, isLoading: projectsLoading } = useProjects();
@@ -27,16 +31,6 @@ function AdminDashboard() {
   const { data: totalRevenue } = useTotalRevenue();
 
   if (projectsLoading || requestsLoading || clientsLoading) return <Spinner />;
-
-  const getClientName = (clientId) => {
-    const client = clients?.find((c) => c.id === clientId);
-    return client?.full_name || "N/A";
-  };
-
-  const getDeveloperName = (developerId) => {
-    const dev = developers?.find((d) => d.id === developerId);
-    return dev?.full_name || "Unassigned";
-  };
 
   return (
     <div className={styles.dashboard}>
@@ -75,64 +69,68 @@ function AdminDashboard() {
       <div className={styles.section}>
         <h2 className={styles.sectionTitle}>Recent Projects</h2>
         <div className={styles.projectGrid}>
-          {projects?.slice(0, 6).map((project) => (
-            <div key={project.id} className={styles.projectCard}>
-              <div className={styles.cardHeader}>
-                <div className={styles.titleWrapper}>
-                  <h3
-                    className={`${styles.cardTitle} ${project.title.length > 40 ? styles.hasTooltip : ""}`}
-                    tabIndex={project.title.length > 40 ? 0 : -1}
-                  >
-                    {project.title}
-                  </h3>
-                  {project.title.length > 40 && (
-                    <div className={styles.tooltip}>{project.title}</div>
-                  )}
-                </div>
-                <span className={`${styles.badge} ${styles[project.status]}`}>
-                  {project.status}
-                </span>
-              </div>
+          {projects?.slice(0, 6).map((project) => {
+            const clientName = getClientName(clients, project.client_id);
+            const developerName = getDeveloperName(
+              developers,
+              project.developer_id,
+            );
 
-              <div className={styles.cardBody}>
-                <div className={styles.cardRow}>
-                  <FaUser className={styles.cardIcon} />
-                  <span className={styles.cardLabel}>Client</span>
-                  <span className={styles.cardValue}>
-                    {getClientName(project.client_id)}
-                  </span>
-                </div>
-                <div className={styles.cardRow}>
-                  <FaCode className={styles.cardIcon} />
-                  <span className={styles.cardLabel}>Developer</span>
-                  <span className={styles.cardValue}>
-                    {getDeveloperName(project.developer_id)}
-                  </span>
-                </div>
-                <div className={styles.cardRow}>
-                  <FaCoins className={styles.cardIcon} />
-                  <span className={styles.cardLabel}>Budget</span>
-                  <span className={styles.cardValue}>
-                    ${project.budget ?? "-"}
-                  </span>
-                </div>
-              </div>
-
-              <div className={styles.cardFooter}>
-                <div className={styles.progressWrapper}>
-                  <div className={styles.progressBar}>
-                    <div
-                      className={styles.progressFill}
-                      style={{ width: `${project.progress ?? 0}%` }}
-                    />
+            return (
+              <div key={project.id} className={styles.projectCard}>
+                <div className={styles.cardHeader}>
+                  <div className={styles.titleWrapper}>
+                    <h3
+                      className={`${styles.cardTitle} ${(project.title || "").length > 40 ? styles.hasTooltip : ""}`}
+                      tabIndex={(project.title || "").length > 40 ? 0 : -1}
+                    >
+                      {project.title}
+                    </h3>
+                    {(project.title || "").length > 40 && (
+                      <div className={styles.tooltip}>{project.title}</div>
+                    )}
                   </div>
-                  <span className={styles.progressText}>
-                    {project.progress ?? 0}%
+                  <span className={`${styles.badge} ${styles[project.status]}`}>
+                    {project.status}
                   </span>
                 </div>
+
+                <div className={styles.cardBody}>
+                  <div className={styles.cardRow}>
+                    <FaUser className={styles.cardIcon} />
+                    <span className={styles.cardLabel}>Client</span>
+                    <span className={styles.cardValue}>{clientName}</span>
+                  </div>
+                  <div className={styles.cardRow}>
+                    <FaCode className={styles.cardIcon} />
+                    <span className={styles.cardLabel}>Developer</span>
+                    <span className={styles.cardValue}>{developerName}</span>
+                  </div>
+                  <div className={styles.cardRow}>
+                    <FaCoins className={styles.cardIcon} />
+                    <span className={styles.cardLabel}>Budget</span>
+                    <span className={styles.cardValue}>
+                      ${project.budget ?? "-"}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.cardFooter}>
+                  <div className={styles.progressWrapper}>
+                    <div className={styles.progressBar}>
+                      <div
+                        className={styles.progressFill}
+                        style={{ width: `${project.progress ?? 0}%` }}
+                      />
+                    </div>
+                    <span className={styles.progressText}>
+                      {project.progress ?? 0}%
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
