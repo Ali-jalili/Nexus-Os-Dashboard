@@ -1,12 +1,11 @@
 /** @format */
 
 import { useState } from "react";
-
 import useDeveloperProjects from "../../hooks/useDeveloperProjects";
 import useDevelopers from "../../hooks/useDevelopers";
 import useAuth from "../../hooks/useAuth";
 import Spinner from "../../ui/Spinner";
-import ProjectDetailsModal from "../../ui/ProjectDetailsModal";
+import ProjectDetailsModal from "../../components/ProjectDetailsModal";
 import {
   FaTasks,
   FaCalendarAlt,
