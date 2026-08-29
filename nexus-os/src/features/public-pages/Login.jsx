@@ -1,8 +1,7 @@
 /** @format */
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
-import toast from "react-hot-toast";
 import {
   FaEnvelope,
   FaLock,
@@ -10,6 +9,8 @@ import {
   FaGoogle,
   FaGithub,
 } from "react-icons/fa";
+import toast from "react-hot-toast";
+import useAuth from "../../hooks/useAuth";
 import styles from "./Login.module.css";
 
 function Login() {
@@ -17,21 +18,27 @@ function Login() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [shake, setShake] = useState(false);
-  const { handleLogin } = useAuth();
+
+  const { role, user, handleLogin } = useAuth();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) return;
+
+    if (role === "admin") navigate("/app/admin");
+    else if (role === "client") navigate("/client-dashboard");
+    else if (role === "developer") navigate("/dev-dashboard");
+    else navigate("/");
+  }, [user, role, navigate]);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
     setShake(false);
+
     try {
-      const loggedInUser = await handleLogin(email, password);
-      const role = loggedInUser?.user_metadata?.role;
-      if (role === "admin") navigate("/app/admin");
-      else if (role === "client") navigate("/client-dashboard");
-      else if (role === "developer") navigate("/dev-dashboard");
-      else navigate("/");
-    } catch (error) {
+      await handleLogin(email, password);
+    } catch {
       toast.error("Invalid email or password");
       setShake(true);
       setTimeout(() => setShake(false), 500);
@@ -60,6 +67,7 @@ function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isLoading}
+              autoComplete="email"
             />
           </div>
         </div>
@@ -75,6 +83,7 @@ function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isLoading}
+              autoComplete="current-password"
             />
           </div>
         </div>
@@ -84,7 +93,15 @@ function Login() {
         </button>
 
         <div className={styles.forgotWrapper}>
-          <span className={styles.forgotLink}>Forgot Password?</span>
+          <button
+            type="button"
+            className={styles.forgotLink}
+            onClick={() =>
+              toast("Please contact admin to reset your password.")
+            }
+          >
+            Forgot Password?
+          </button>
         </div>
 
         <div className={styles.separator}>
@@ -103,7 +120,7 @@ function Login() {
         <p className={styles.footerText}>
           Don't have an account?{" "}
           <Link to="/" className={styles.link}>
-            Get Started
+            Back to Home
           </Link>
         </p>
       </form>

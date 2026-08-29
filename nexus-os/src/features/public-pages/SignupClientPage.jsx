@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import supabase from "../../services/supabase";
+
 import toast from "react-hot-toast";
 import { FaSpinner } from "react-icons/fa";
 import styles from "./SignupClientPage.module.css";
+import { signupClient } from "../../services/authService";
 
 function SignupClientPage() {
   const [name, setName] = useState("");
@@ -27,32 +28,16 @@ function SignupClientPage() {
       return toast.error("Password must be at least 6 characters.");
     }
 
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        data: {
-          full_name: name,
-          role: "client",
-        },
-      },
-    });
-
+    const { error } = await signupClient({ name, email, password });
     if (error) {
       setIsLoading(false);
       toast.error(error.message);
       return;
     }
 
-    if (data.user && data.session) {
-      await supabase.auth.setSession({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token,
-      });
-      setIsLoading(false);
-      toast.success("Account created successfully!");
-      navigate("/client-dashboard");
-    }
+    setIsLoading(false);
+    toast.success("Account created successfully!");
+    navigate("/client-dashboard");
   }
 
   return (
