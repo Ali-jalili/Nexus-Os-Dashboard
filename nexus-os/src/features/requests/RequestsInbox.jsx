@@ -9,12 +9,15 @@ import {
   FaCheckCircle,
   FaTimesCircle,
 } from "react-icons/fa";
-import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
+
 import useRequests from "../../hooks/useRequests";
+
 import StatCard from "../../ui/StatCard";
 import Spinner from "../../ui/Spinner";
+
 import styles from "./RequestsInbox.module.css";
+import { approveRequest, rejectRequest } from "../../services/requestService";
 
 function RequestsInbox() {
   const queryClient = useQueryClient();
@@ -32,69 +35,27 @@ function RequestsInbox() {
   async function handleApprove(req) {
     setIsApproving(req.id);
 
-    console.log("Inserting:", {
-      title: req.project_title,
-      description: req.project_description,
-    });
+    const { error } = await approveRequest(req);
 
-    const { error: projectError } = await supabase.from("projects").insert({
-      title: req.project_title,
-      description: req.project_description,
-      client_id: req.client_id,
-      status: "pending",
-      budget: req.budget,
-    });
-
-    if (projectError) {
+    if (error) {
       setIsApproving(null);
-      return toast.error(projectError.message);
-    }
-
-    const { error: updateError } = await supabase
-      .from("clients")
-      .update({
-        company_name: req.company_name,
-        phone: req.phone,
-      })
-      .eq("id", req.client_id);
-
-    if (updateError) {
-      setIsApproving(null);
-      return toast.error(updateError.message);
-    }
-
-    const { error: deleteError } = await supabase
-      .from("requests")
-      .delete()
-      .eq("id", req.id);
-
-    if (deleteError) {
-      setIsApproving(null);
-      return toast.error(deleteError.message);
+      return toast.error(error.message);
     }
 
     setIsApproving(null);
     toast.success("Request approved!");
     queryClient.invalidateQueries({ queryKey: ["requests"] });
     queryClient.invalidateQueries({ queryKey: ["clients"] });
-
-    console.log({
-      project_title: req.project_title,
-      project_description: req.project_description,
-    });
   }
 
   async function handleReject(req) {
     setIsRejecting(req.id);
 
-    const { error: deleteError } = await supabase
-      .from("requests")
-      .delete()
-      .eq("id", req.id);
+    const { error } = await rejectRequest(req.id);
 
-    if (deleteError) {
+    if (error) {
       setIsRejecting(null);
-      return toast.error(deleteError.message);
+      return toast.error(error.message);
     }
 
     toast.success("Request rejected!");
@@ -150,7 +111,7 @@ function RequestsInbox() {
 
               {isExpanded && (
                 <div className={styles.expandedContent}>
-                  <strong>Dscription:</strong>
+                  <strong>Description:</strong>
                   <p className={styles.description}>
                     {req.project_description}
                   </p>
