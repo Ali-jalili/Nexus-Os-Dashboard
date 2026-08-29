@@ -7,7 +7,12 @@ import supabase from "../services/supabase.js";
 
 function useRequests() {
   async function fetchRequests() {
-    const { data, error } = await supabase.from("requests").select("*");
+    const { data, error } = await supabase
+      .from("requests")
+      .select("*")
+      .eq("status", "pending")
+      .order("created_at", { ascending: false });
+
     if (error) throw new Error(error.message);
     return data;
   }

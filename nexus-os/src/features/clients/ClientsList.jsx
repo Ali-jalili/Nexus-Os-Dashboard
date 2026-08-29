@@ -1,15 +1,22 @@
 /** @format */
+
 import { FaUser, FaBuilding, FaEnvelope, FaPhone } from "react-icons/fa";
-import styles from "./ClientsList.module.css";
-import Spinner from "../../ui/Spinner";
-import useClients from "../../Hook/useClients";
 import toast from "react-hot-toast";
+
+import useClients from "../../hooks/useClients";
+import Spinner from "../../ui/Spinner";
+
+import styles from "./ClientsList.module.css";
 
 function ClientsList() {
   const { data, isLoading, error } = useClients();
 
   if (isLoading) return <Spinner />;
-  if (error) toast.error(error.message);
+
+  if (error) {
+    toast.error(error.message);
+    return <p className={styles.error}>Failed to load clients.</p>;
+  }
 
   const isEmpty = data?.length === 0;
 

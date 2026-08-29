@@ -1,15 +1,32 @@
 /** @format */
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import useAuth from "../../Hook/useAuth";
-import useClientProjects from "../../Hook/useClientProjects";
-import useClientRequests from "../../Hook/useClientRequests";
-import Spinner from "../../ui/Spinner";
-import { FaPlus, FaClock, FaCheckCircle, FaRocket } from "react-icons/fa";
-import styles from "./ClientView.module.css";
-import supabase from "../../services/supabase";
-import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  FaPlus,
+  FaClock,
+  FaCheckCircle,
+  FaRocket,
+  FaTimes,
+  FaExclamationTriangle,
+  FaEdit,
+  FaTrash,
+  FaSpinner,
+} from "react-icons/fa";
+import toast from "react-hot-toast";
+
+import useAuth from "../../hooks/useAuth";
+import useClientProjects from "../../hooks/useClientProjects";
+import useClientRequests from "../../hooks/useClientRequests";
+
+import { cancelRequest, deleteRequest } from "../../services/requestService";
+import { archiveProject } from "../../services/projectService";
+
+import Spinner from "../../ui/Spinner";
+import ProjectDetailsModal from "../../components/ProjectDetailsModal";
+
+import styles from "./ClientView.module.css";
 
 function ClientView() {
   const queryClient = useQueryClient();
@@ -17,43 +34,70 @@ function ClientView() {
   const { data: clientProjects, error, isLoading } = useClientProjects(user);
   const { data: clientRequests, isLoading: isRequestsLoading } =
     useClientRequests(user);
+
   const [selectedRequest, setSelectedRequest] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(null);
+  const [isCancelling, setIsCancelling] = useState(null);
 
   if (isLoading || isRequestsLoading) return <Spinner />;
   if (error) return <p className={styles.error}>Error: {error.message}</p>;
 
-  const hasRequests = clientRequests?.length > 0;
+  const pendingRequests = clientRequests?.filter(
+    (req) => req.status === "pending",
+  );
+
+  const rejectedRequests = clientRequests?.filter(
+    (req) => req.status === "rejected",
+  );
+
+  const hasPending = pendingRequests?.length > 0;
+  const hasRejected = rejectedRequests?.length > 0;
   const hasProjects = clientProjects?.length > 0;
-  const isEmpty = !hasRequests && !hasProjects;
+  const isEmpty = !hasPending && !hasRejected && !hasProjects;
 
   async function handleCancelRequest(requestId) {
-    const { data, error } = await supabase
-      .from("requests")
-      .update({ status: "cancelled" })
-      .eq("id", requestId);
+    setIsCancelling(requestId);
+
+    const { error } = await cancelRequest(requestId);
 
     if (error) {
-      console.error("Cancel error:", error);
-      return toast.error("Failed to cancel request: " + error.message);
+      setIsCancelling(null);
+      return toast.error(error.message);
     }
-    if (data) toast.success("Request cancelled successfully");
 
+    toast.success("Request cancelled successfully");
+    setIsCancelling(null);
+    queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
+  }
+
+  async function handleDeleteRequest(requestId) {
+    setIsDeleting(requestId);
+
+    const { error } = await deleteRequest(requestId);
+
+    if (error) {
+      setIsDeleting(null);
+      return toast.error(error.message);
+    }
+
+    toast.success("Request deleted.");
+    setIsDeleting(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
   }
 
   async function handleArchiveProject(projectId) {
-    const { error } = await supabase
-      .from("projects")
-      .update({ status: "archived" })
-      .eq("id", projectId);
+    const { error } = await archiveProject(projectId);
 
-    if (error) return toast.error("Failed to archive: " + error.message);
+    if (error) return toast.error(error.message);
+
     toast.success("Project archived");
     queryClient.invalidateQueries({ queryKey: ["client-projects", user?.id] });
   }
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.greeting}>
@@ -64,11 +108,15 @@ function ClientView() {
             Manage your projects and track progress
           </p>
         </div>
-        <Link to="/request-project" className={styles.addBtn}>
-          <FaPlus /> New Project
-        </Link>
+
+        {!isEmpty && (
+          <Link to="/request-project" className={styles.addBtn}>
+            <FaPlus /> New Project
+          </Link>
+        )}
       </div>
 
+      {/* Empty State */}
       {isEmpty && (
         <div className={styles.emptyState}>
           <FaRocket className={styles.emptyIcon} />
@@ -80,12 +128,14 @@ function ClientView() {
         </div>
       )}
 
-      {hasRequests && (
+      {/* Pending Requests */}
+      {hasPending && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <FaClock className={styles.sectionIcon} />
             <h2>Pending Requests</h2>
           </div>
+
           <div className={styles.reviewBanner}>
             <FaClock className={styles.reviewIcon} />
             <p>
@@ -93,110 +143,224 @@ function ClientView() {
               24-48 hours.
             </p>
           </div>
+
           <div className={styles.cardGrid}>
-            {clientRequests?.map((req) => (
+            {pendingRequests?.map((req) => (
               <div key={req.id} className={styles.card}>
                 <div className={styles.cardHeader}>
-                  <h3>
-                    {req.project_description?.slice(0, 50) ||
-                      "Untitled Request"}
+                  <h3 className={styles.cardTitle}>
+                    {req.project_title || "Untitled Request"}
                   </h3>
                   <span className={`${styles.badge} ${styles.pending}`}>
                     Under Review
                   </span>
                 </div>
+
                 <p className={styles.date}>
                   Submitted: {new Date(req.created_at).toLocaleDateString()}
                 </p>
 
-                <button
-                  className={styles.detailBtn}
-                  onClick={() => setSelectedRequest(req)}
-                >
-                  View Details
-                </button>
-                <button
-                  onClick={() => handleCancelRequest(req.id)}
-                  className={styles.cancelBtn}
-                >
-                  Cancel Request
-                </button>
+                <div className={styles.cardActions}>
+                  <button
+                    className={styles.detailBtn}
+                    onClick={() => setSelectedRequest(req)}
+                  >
+                    View Details
+                  </button>
+                  <button
+                    className={styles.cancelBtn}
+                    onClick={() => handleCancelRequest(req.id)}
+                    disabled={isCancelling === req.id}
+                  >
+                    {isCancelling === req.id ? (
+                      <FaSpinner className={styles.spinner} />
+                    ) : (
+                      "Cancel Request"
+                    )}
+                  </button>
+                </div>
               </div>
             ))}
           </div>
         </section>
       )}
 
+      {/* Rejected Requests */}
+      {hasRejected && (
+        <section className={styles.section}>
+          <div className={styles.sectionHeader}>
+            <FaExclamationTriangle className={styles.rejectedIcon} />
+            <h2>Rejected Requests</h2>
+          </div>
+
+          <div className={styles.cardGrid}>
+            {rejectedRequests?.map((req) => (
+              <div key={req.id} className={styles.rejectedCard}>
+                <div className={styles.cardHeader}>
+                  <h3 className={styles.cardTitle}>
+                    {req.project_title || "Untitled Request"}
+                  </h3>
+                  <span className={`${styles.badge} ${styles.rejected}`}>
+                    Rejected
+                  </span>
+                </div>
+
+                {req.reject_reason && (
+                  <div className={styles.rejectReason}>
+                    <strong>Reason:</strong>
+                    <p>{req.reject_reason}</p>
+                  </div>
+                )}
+
+                <p className={styles.date}>
+                  Submitted: {new Date(req.created_at).toLocaleDateString()}
+                </p>
+
+                <div className={styles.rejectedActions}>
+                  <Link
+                    to={`/request-project?edit=${req.id}`}
+                    className={styles.editBtn}
+                  >
+                    <FaEdit /> Edit & Resubmit
+                  </Link>
+                  <button
+                    className={styles.deleteBtn}
+                    onClick={() => handleDeleteRequest(req.id)}
+                    disabled={isDeleting === req.id}
+                  >
+                    {isDeleting === req.id ? (
+                      <FaSpinner className={styles.spinner} />
+                    ) : (
+                      <FaTrash />
+                    )}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Active Projects */}
       {hasProjects && (
         <section className={styles.section}>
           <div className={styles.sectionHeader}>
             <FaCheckCircle className={styles.sectionIcon} />
             <h2>Active Projects</h2>
           </div>
+
           <div className={styles.cardGrid}>
             {clientProjects?.map((project) => (
-              <div key={project.id} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h3>{project.title}</h3>
-                  <span className={`${styles.badge} ${styles[project.status]}`}>
+              <div key={project.id} className={styles.projectCard}>
+                <div className={styles.projectHeader}>
+                  <h3 className={styles.cardTitle} title={project.title}>
+                    {project.title}
+                  </h3>
+                  <span
+                    className={`${styles.badge} ${styles[project.status] || styles.pending}`}
+                  >
                     {project.status}
                   </span>
                 </div>
-                <div className={styles.progressWrapper}>
+
+                <p className={styles.projectDescription}>
+                  {project.description || "No description provided."}
+                </p>
+
+                <div className={styles.progressSection}>
+                  <div className={styles.progressLabel}>
+                    <span>Progress</span>
+                    <span>{project.progress ?? 0}%</span>
+                  </div>
                   <div className={styles.progressBar}>
                     <div
                       className={styles.progressFill}
                       style={{ width: `${project.progress ?? 0}%` }}
                     />
                   </div>
-                  <span className={styles.progressText}>
-                    {project.progress ?? 0}%
-                  </span>
                 </div>
-                <p className={styles.date}>
-                  Started: {new Date(project.created_at).toLocaleDateString()}
-                </p>
-                {project.status === "completed" && (
-                  <button
-                    className={styles.archiveBtn}
-                    onClick={() => handleArchiveProject(project.id)}
-                  >
-                    Archive
-                  </button>
-                )}
+
+                <div className={styles.projectFooter}>
+                  <p className={styles.date}>
+                    Started: {new Date(project.created_at).toLocaleDateString()}
+                  </p>
+
+                  <div className={styles.projectActions}>
+                    {project.status === "completed" && (
+                      <button
+                        className={styles.archiveBtn}
+                        onClick={() => handleArchiveProject(project.id)}
+                      >
+                        Archive
+                      </button>
+                    )}
+                    <button
+                      className={styles.detailBtn}
+                      onClick={() => setSelectedProject(project)}
+                    >
+                      View Details
+                    </button>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </section>
       )}
 
+      {/* Request Details Modal */}
       {selectedRequest && (
         <div
           className={styles.modalOverlay}
           onClick={() => setSelectedRequest(null)}
         >
           <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <h3>Request Details</h3>
-            <p>
-              <strong>Description:</strong>
-            </p>
-            <p>{selectedRequest.project_description}</p>
-            <p>
-              <strong>Budget:</strong>{" "}
-              {selectedRequest.budget || "Not specified"}
-            </p>
-            <p>
-              <strong>Submitted:</strong>{" "}
-              {new Date(selectedRequest.created_at).toLocaleDateString()}
-            </p>
-            <button
-              className={styles.closeBtn}
-              onClick={() => setSelectedRequest(null)}
-            >
-              Close
-            </button>
+            <div className={styles.modalHeader}>
+              <h3>Request Details</h3>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setSelectedRequest(null)}
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className={styles.modalBody}>
+              <div className={styles.modalTitle}>
+                <span className={styles.modalLabel}>Project</span>
+                <h4>{selectedRequest.project_title}</h4>
+              </div>
+
+              <div className={styles.modalSection}>
+                <span className={styles.modalLabel}>Description</span>
+                <p className={styles.modalText}>
+                  {selectedRequest.project_description}
+                </p>
+              </div>
+
+              <div className={styles.modalRow}>
+                <div className={styles.modalItem}>
+                  <span className={styles.modalLabel}>Budget</span>
+                  <p>{selectedRequest.budget || "Not specified"}</p>
+                </div>
+                <div className={styles.modalItem}>
+                  <span className={styles.modalLabel}>Submitted</span>
+                  <p>
+                    {new Date(selectedRequest.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      )}
+
+      {/* Project Details Modal */}
+      {selectedProject && (
+        <ProjectDetailsModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+        />
       )}
     </div>
   );

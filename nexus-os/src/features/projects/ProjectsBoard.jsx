@@ -1,24 +1,30 @@
 /** @format */
-import { useMemo } from "react";
 
-import { useState } from "react";
-import styles from "./ProjectsBoard.module.css";
-import useProjects from "../../Hook/useProjects";
-import useDevelopers from "../../Hook/useDevelopers";
-import supabase from "../../services/supabase";
-import toast from "react-hot-toast";
+import { useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import useClients from "../../Hook/useClients";
+import toast from "react-hot-toast";
+
+import useProjects from "../../hooks/useProjects";
+import useDevelopers from "../../hooks/useDevelopers";
+import useClients from "../../hooks/useClients";
+
+import { getClientName, getDeveloperName } from "../../../utils/names";
+import {
+  assignDeveloper,
+  updateProjectStatus,
+} from "../../services/projectService";
+
 import Spinner from "../../ui/Spinner";
+import styles from "./ProjectsBoard.module.css";
 
 function ProjectsBoard() {
   const queryClient = useQueryClient();
-  const { data: clientsData } = useClients();
 
   const { data: projectData, error, isLoading } = useProjects();
   const { data: developersData } = useDevelopers();
-  const [editingProject, setEditingProject] = useState(null);
+  const { data: clientsData } = useClients();
 
+  const [editingProject, setEditingProject] = useState(null);
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
@@ -28,7 +34,7 @@ function ProjectsBoard() {
 
     if (search) {
       result = result.filter((item) =>
-        item.title.toLowerCase().includes(search.toLowerCase()),
+        (item.title || "").toLowerCase().includes(search.toLowerCase()),
       );
     }
 
@@ -55,56 +61,41 @@ function ProjectsBoard() {
   }
 
   async function handleAssign(developerId, projectId) {
-    const { error } = await supabase
-      .from("projects")
-      .update({ developer_id: developerId })
-      .eq("id", projectId);
+    const { error } = await assignDeveloper(projectId, developerId);
 
     if (error) return toast.error(error.message);
-    toast.success("Developer assigned successfully!");
 
+    toast.success("Developer assigned successfully!");
     queryClient.invalidateQueries({ queryKey: ["projects"] });
   }
 
   async function handleUpdate() {
-    const { error } = await supabase
-      .from("projects")
-      .update({
-        status: editingProject.status,
-        progress: editingProject.progress,
-      })
-      .eq("id", editingProject.id);
+    const { error } = await updateProjectStatus(editingProject.id, {
+      status: editingProject.status,
+      progress: editingProject.progress,
+    });
 
     if (error) return toast.error(error.message);
+
     toast.success("Project updated!");
     setEditingProject(null);
     queryClient.invalidateQueries({ queryKey: ["projects"] });
   }
 
-  const getDeveloperName = (developerId) => {
-    const dev = developersData?.find((d) => d.id === developerId);
-    return dev?.full_name || "Not Assigned";
-  };
-
-  const getClientName = (clientId) => {
-    const client = clientsData?.find((c) => c.id === clientId);
-    return client?.full_name || "N/A";
-  };
-
   if (isLoading) return <Spinner />;
-  if (error) toast.error(error.message);
+  if (error) {
+    toast.error(error.message);
+    return <p className={styles.error}>Failed to load projects.</p>;
+  }
 
   return (
     <div className={styles.board}>
-      {/* هدر */}
+      {/* Header */}
       <div className={styles.header}>
         <h1>Projects Board</h1>
-        <button className={styles.addBtn} disabled>
-          + Add Project
-        </button>
       </div>
 
-      {/* نوار ابزار */}
+      {/* Toolbar */}
       <div className={styles.toolbar}>
         <input
           value={search}
@@ -135,7 +126,7 @@ function ProjectsBoard() {
         </select>
       </div>
 
-      {/* کارت‌های پروژه */}
+      {/* Project Cards */}
       <div className={styles.grid}>
         {sortedProjects?.map((item) => (
           <div key={item.id} className={styles.card}>
@@ -154,7 +145,7 @@ function ProjectsBoard() {
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Client</span>
                 <span className={styles.metaValue}>
-                  {getClientName(item.client_id)}
+                  {getClientName(clientsData, item.client_id)}
                 </span>
               </div>
               <div className={styles.meta}>
@@ -164,7 +155,7 @@ function ProjectsBoard() {
               <div className={styles.meta}>
                 <span className={styles.metaLabel}>Developer</span>
                 <span className={styles.metaValue}>
-                  {getDeveloperName(item.developer_id)}{" "}
+                  {getDeveloperName(developersData, item.developer_id)}
                 </span>
               </div>
 
@@ -205,7 +196,7 @@ function ProjectsBoard() {
         ))}
       </div>
 
-      {/* Modal ویرایش پروژه */}
+      {/* Edit Modal */}
       {editingProject && (
         <div
           className={styles.modalOverlay}

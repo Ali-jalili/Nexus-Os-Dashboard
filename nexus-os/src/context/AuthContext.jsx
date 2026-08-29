@@ -36,6 +36,12 @@ function AuthProvider({ children }) {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT") {
+        setUser(null);
+        setRole(null);
+        setIsLoading(false);
+        return;
+      }
       if (session?.user) {
         setUser(session.user);
         setRole(session.user.user_metadata?.role ?? null);

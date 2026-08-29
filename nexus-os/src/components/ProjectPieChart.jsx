@@ -1,8 +1,8 @@
 /** @format */
 
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
-import useProjectStats from "../Hook/useProjectStats";
-import Spinner from "./Spinner";
+import useProjectStats from "../hooks/useProjectStats";
+import Spinner from "../ui/Spinner";
 import styles from "./ProjectPieChart.module.css";
 
 const COLORS = {

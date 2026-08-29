@@ -1,34 +1,9 @@
 /** @format */
 
-// /** @format */
-
-// import { Outlet } from "react-router-dom";
-// import Sidebar from "../ui/Sidebar";
-// import Header from "../ui/Header";
-// import styles from "./AppLayout.module.css";
-
-// function AppLayout() {
-//   return (
-//     <div className={styles.layout}>
-//       <Header showSidebarToggle={true} />
-//       <div className={styles.main}>
-//         <Sidebar />
-//         <main className={styles.content}>
-//           <Outlet />
-//         </main>
-//       </div>
-//     </div>
-//   );
-// }
-
-// export default AppLayout;
-
-/** @format */
-
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../ui/Sidebar";
-import Header from "../ui/Header";
+import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
 import styles from "./AppLayout.module.css";
 
 function AppLayout() {
@@ -39,7 +14,6 @@ function AppLayout() {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      // تو موبایل سایدبار پیش‌فرض بسته، تو دسکتاپ باز
       setSidebarOpen(!mobile);
     };
 
@@ -73,7 +47,7 @@ function AppLayout() {
           <Outlet />
         </main>
       </div>
-      {/* Overlay برای موبایل */}
+
       {isMobile && sidebarOpen && (
         <div className={styles.overlay} onClick={closeSidebar} />
       )}

@@ -1,6 +1,6 @@
 /** @format */
 import { motion } from "framer-motion";
-import useCountUp from "../Hook/useCountUp";
+import useCountUp from "../hooks/useCountUp";
 import styles from "./CountUp.module.css";
 function CountUp({ end, label, icon: Icon, startCounting }) {
   const count = useCountUp(end, 2000, startCounting);

@@ -1,6 +1,6 @@
 /** @format */
 
-import { useParticleCanvas } from "../Hook/useParticleCanvas";
+import { useParticleCanvas } from "../hooks/useParticleCanvas";
 
 function ParticleBackground() {
   const canvasRef = useParticleCanvas();

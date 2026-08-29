@@ -107,6 +107,12 @@
   width: 18px;
 }
 
+.error {
+  text-align: center;
+  color: var(--error);
+  padding: 2rem;
+}
+
 /* ========== Responsive ========== */
 @media (max-width: 768px) {
   .grid {
