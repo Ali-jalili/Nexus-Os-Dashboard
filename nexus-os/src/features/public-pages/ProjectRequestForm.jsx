@@ -9,10 +9,11 @@ import {
   FaPhone,
   FaBuilding,
 } from "react-icons/fa";
-import supabase from "../../services/supabase";
+
 import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import styles from "./ProjectRequestForm.module.css";
+import { createRequest } from "../../services/requestService";
 
 function ProjectRequestForm() {
   const { user } = useAuth();
@@ -35,15 +36,13 @@ function ProjectRequestForm() {
 
     setIsLoading(true);
 
-    const { error } = await supabase.from("requests").insert({
-      project_title: title,
-      project_description: description,
+    const { error } = await createRequest({
+      title,
+      description,
       budget,
       phone,
-      company_name: company,
-      contact_email: user?.email,
-      client_id: user?.id,
-      status: "pending",
+      company,
+      user,
     });
 
     if (error) {
