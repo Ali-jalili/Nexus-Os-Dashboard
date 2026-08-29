@@ -1,30 +1,38 @@
 /** @format */
+
+import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   FaUserTie,
   FaEnvelope,
-  FaCode,
   FaLink,
   FaCalendarAlt,
+  FaSpinner,
 } from "react-icons/fa";
-import useCandidates from "../../hooks/useCandidates";
-import supabase from "../../services/supabase";
 import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
+
+import useCandidates from "../../hooks/useCandidates";
+import { deleteCandidate } from "../../services/candidateService";
+
 import styles from "./CandidatesList.module.css";
 
 function CandidatesList() {
   const { data: candidates } = useCandidates();
   const queryClient = useQueryClient();
+  const [isRejecting, setIsRejecting] = useState(null);
 
   async function handleReject(candidate) {
-    const { error: deleteError } = await supabase
-      .from("candidates")
-      .delete()
-      .eq("id", candidate.id);
+    setIsRejecting(candidate.id);
 
-    if (deleteError) return toast.error(deleteError.message);
+    const { error } = await deleteCandidate(candidate.id);
+
+    if (error) {
+      setIsRejecting(null);
+      return toast.error(error.message);
+    }
 
     toast.success("Candidate rejected and removed.");
+    setIsRejecting(null);
     queryClient.invalidateQueries({ queryKey: ["candidates"] });
   }
 
@@ -84,8 +92,13 @@ function CandidatesList() {
               <button
                 className={styles.rejectBtn}
                 onClick={() => handleReject(candidate)}
+                disabled={isRejecting === candidate.id}
               >
-                Reject
+                {isRejecting === candidate.id ? (
+                  <FaSpinner className={styles.spinner} />
+                ) : (
+                  "Reject"
+                )}
               </button>
             </div>
           </div>
