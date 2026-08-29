@@ -29,7 +29,44 @@ async function signupClient({ name, email, password }) {
     }
   }
 
+  return {
+    data,
+    error: null,
+  };
+}
+
+async function signupDeveloper({
+  name,
+  email,
+  password,
+  specialty,
+  resumeUrl,
+}) {
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: {
+        full_name: name,
+        role: "developer",
+      },
+    },
+  });
+
+  if (error) return { data: null, error };
+
+  if (data?.user) {
+    const { error: insertError } = await supabase.from("candidates").insert({
+      full_name: name,
+      email,
+      specialty,
+      resume_url: resumeUrl,
+    });
+
+    if (insertError) return { data: null, error: insertError };
+  }
+
   return { data, error: null };
 }
 
-export { signupClient };
+export { signupClient, signupDeveloper };
