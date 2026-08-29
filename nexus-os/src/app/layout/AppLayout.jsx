@@ -27,8 +27,8 @@
 
 import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
-import Sidebar from "../ui/Sidebar";
-import Header from "../ui/Header";
+import Sidebar from "../../ui/Sidebar";
+import Header from "../../ui/Header";
 import styles from "./AppLayout.module.css";
 
 function AppLayout() {

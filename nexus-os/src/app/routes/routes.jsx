@@ -3,12 +3,13 @@
 import { lazy, Suspense } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import AppLayout from "../AppLayout";
-import ClientLayout from "../ClientLayout";
-import PublicLayout from "../PublicLayout";
+import AppLayout from "../layout/AppLayout";
+import ClientLayout from "../layout/ClientLayout";
+import PublicLayout from "../layout/PublicLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleGate from "./RoleGate";
 import Spinner from "../../ui/Spinner";
+import DevLayout from "../layout/DevLayout";
 
 const HomePage = lazy(() => import("../../features/public-pages/HomePage"));
 const ProjectRequestForm = lazy(
@@ -97,7 +98,12 @@ const routes = createBrowserRouter([
     children: [
       {
         element: <RoleGate allowedRoles={["developer"]} />,
-        children: [{ index: true, element: <DeveloperView /> }],
+        children: [
+          {
+            element: <DevLayout />,
+            children: [{ index: true, element: <DeveloperView /> }],
+          },
+        ],
       },
     ],
   },
