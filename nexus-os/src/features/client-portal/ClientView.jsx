@@ -71,7 +71,7 @@ function ClientView() {
     setIsDeleting(requestId);
 
     const { error } = await deleteRequest(requestId);
-
+    console.log("Delete error:", error);
     if (error) {
       setIsDeleting(null);
       return toast.error(error.message);
@@ -80,6 +80,7 @@ function ClientView() {
     toast.success("Request deleted.");
     setIsDeleting(null);
     queryClient.invalidateQueries({ queryKey: ["client-requests", user?.id] });
+    console.log("Invalidating:", ["client-requests", user?.id]);
   }
 
   async function handleArchiveProject(projectId) {
@@ -247,9 +248,11 @@ function ClientView() {
 
           <div className={styles.cardGrid}>
             {clientProjects?.map((project) => (
-              <div key={project.id} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h3 className={styles.cardTitle}>{project.title}</h3>
+              <div key={project.id} className={styles.projectCard}>
+                <div className={styles.projectHeader}>
+                  <h3 className={styles.cardTitle} title={project.title}>
+                    {project.title}
+                  </h3>
                   <span
                     className={`${styles.badge} ${styles[project.status] || styles.pending}`}
                   >
@@ -257,30 +260,37 @@ function ClientView() {
                   </span>
                 </div>
 
-                <div className={styles.progressWrapper}>
+                <p className={styles.projectDescription}>
+                  {project.description || "No description provided."}
+                </p>
+
+                <div className={styles.progressSection}>
+                  <div className={styles.progressLabel}>
+                    <span>Progress</span>
+                    <span>{project.progress ?? 0}%</span>
+                  </div>
                   <div className={styles.progressBar}>
                     <div
                       className={styles.progressFill}
                       style={{ width: `${project.progress ?? 0}%` }}
                     />
                   </div>
-                  <span className={styles.progressText}>
-                    {project.progress ?? 0}%
-                  </span>
                 </div>
 
-                <p className={styles.date}>
-                  Started: {new Date(project.created_at).toLocaleDateString()}
-                </p>
+                <div className={styles.projectFooter}>
+                  <p className={styles.date}>
+                    Started: {new Date(project.created_at).toLocaleDateString()}
+                  </p>
 
-                {project.status === "completed" && (
-                  <button
-                    className={styles.archiveBtn}
-                    onClick={() => handleArchiveProject(project.id)}
-                  >
-                    Archive
-                  </button>
-                )}
+                  {project.status === "completed" && (
+                    <button
+                      className={styles.archiveBtn}
+                      onClick={() => handleArchiveProject(project.id)}
+                    >
+                      Archive
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>

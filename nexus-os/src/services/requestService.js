@@ -32,14 +32,13 @@ export async function updateRequest(requestId, updates) {
 
   return { data, error };
 }
-
 export async function deleteRequest(requestId) {
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("requests")
     .delete()
     .eq("id", requestId);
 
-  return { data, error };
+  return { error };
 }
 
 export async function approveRequest(req) {
