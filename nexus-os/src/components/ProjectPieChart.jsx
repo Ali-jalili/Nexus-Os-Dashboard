@@ -2,7 +2,7 @@
 
 import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 import useProjectStats from "../hooks/useProjectStats";
-import Spinner from "./Spinner";
+import Spinner from "../ui/Spinner";
 import styles from "./ProjectPieChart.module.css";
 
 const COLORS = {

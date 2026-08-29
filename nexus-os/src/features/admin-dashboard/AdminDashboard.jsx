@@ -8,7 +8,7 @@ import useTotalRevenue from "../../hooks/useTotalRevenue";
 
 import StatCard from "../../ui/StatCard";
 import Spinner from "../../ui/Spinner";
-import ProjectPieChart from "../../ui/ProjectPieChart";
+import ProjectPieChart from "../../components/ProjectPieChart";
 
 import {
   FaProjectDiagram,
