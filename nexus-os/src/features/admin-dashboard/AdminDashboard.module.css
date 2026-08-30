@@ -251,6 +251,19 @@
     padding: 1rem;
   }
 
+  .projectGrid {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  .projectCard {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
   .heading {
     font-size: 1.3rem;
   }
@@ -264,11 +277,19 @@
     gap: 0.75rem;
   }
 
-  .projectGrid {
-    grid-template-columns: 1fr;
-  }
-
   .cardTitle {
     font-size: 0.95rem;
+  }
+
+  .cardLabel {
+    margin-right: 0;
+  }
+
+  .cardRow {
+    flex-wrap: wrap;
+  }
+
+  .content {
+    padding: 1rem;
   }
 }

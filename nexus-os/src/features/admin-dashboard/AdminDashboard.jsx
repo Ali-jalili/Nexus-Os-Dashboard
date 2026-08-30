@@ -61,6 +61,7 @@ function AdminDashboard() {
           title="Total Revenue"
           value={totalRevenue}
           icon={FaDollarSign}
+          isCurrency
         />
       </div>
 
