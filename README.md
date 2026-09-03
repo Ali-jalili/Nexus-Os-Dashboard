@@ -66,7 +66,7 @@ Follow these steps to run the project locally:
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/Ali-jalili/Nexus-Os-Dashboard.git
+   git clone git@github.com:Ali-jalili/NexusOS-Platform.git
    ```
 
 2. **Navigate to the project directory:**
