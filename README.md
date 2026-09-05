@@ -41,7 +41,7 @@ A modern SaaS-based agency management platform built with React and Supabase to 
 
 ### Frontend
 * **Core:** React, Vite, JavaScript
-* **Routing & State Management:** React Router v6, TanStack React Query v5, Context API, `useReducer`
+* **Routing & State Management:** React Router v6, TanStack React Query v5, Context API,
 * **UI & Animation:** Framer Motion, Recharts, React Icons, React Hot Toast, CSS Modules
 
 ### Backend & Database
